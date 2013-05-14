@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Mortar – Watchtower</title>
+    <link rel="shortcut icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/css/base.css" type="text/css" />
+    <link rel="stylesheet" href="/css/illustrate.css" type="text/css" />
+  </head>
+  
+  <body>
+  
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container">
+        <div class="brand">
+          <img class="logo" src="/images/mortar_logo.png">
+        </div>
+        <img id="activity-monitor" src="/images/spinner.gif">
+      </div>
+    </div>
+  </div>
+  <div id="error-container">
+  </div>
+
+  <div class="container page_wrap">
+    <div class="row row-margin">
+      <div class="span12">
+        <h2>Watching: <%= settings.title.capitalize %></h2>
+      </div>
+    </div>
+    <div id="illustrate_content">
+
+    </div>
+  </div>
+  <script src="/js/jquery-1.7.1.min.js"></script>
+  <script src="/js/jquery.transit.js"></script>
+  <script src="/js/jquery.stylestack.js"></script>
+  <script src="/js/zero_clipboard.js"></script>
+  <script src="/js/mortar-table.js"></script>
+  <script src="/js/underscore.js"></script>
+  <script src="/js/illustrate-live.js"></script>
+  <%= @illustrate_templates %>
+  <%= @error_templates %>
+  </body>
+
+</html>

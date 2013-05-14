@@ -1,0 +1,88 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    color: #333333;
+}
+strong {
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight:bold;
+}
+.clipboard {
+    display:none;
+}
+
+.navbar {
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:99999;
+    height:37px;
+}
+.navbar .navbar-inner {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.5),inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+#error-container {
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:88888;
+    padding-top:34px;
+}
+#error-container .error {
+    background:rgb(236,73,73);
+    color: rgb(46, 46, 46);
+}
+#error-container .warn {
+    background:#fdd400;
+}
+#error-container .container > * {
+    display:inline-block;
+    vertical-align:middle;
+}
+.caution-image {
+    float: left;
+    margin-right: 10px;
+}
+#error-container > div {
+    margin-top: -100%;
+    padding:6px 0;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.25),inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+#error-container .container {
+    padding:0 20px;
+}
+#activity-monitor {
+    display:none;
+    float:right;
+    margin-top: 9px;
+    margin-right: 10px;
+}
+.container.page_wrap {
+    padding-top:50px;
+    min-height:500px;
+}
+.navbar .brand {
+    margin-right:0;
+}
+.navbar .brand .logo {
+    width:150px;
+}
+
+.illustrate_table {
+}
+
+.illustrate_table th {
+    background: #EEEEEE;
+    font-size: 14px;
+}
+
+.illustrate_content_wrapper {
+    padding: 10px 10px 10px 10px;
+    margin: 0;
+}
+#illustrate_content {
+  position:relative;
+  overflow-x:auto;
+  padding: 0 0 40px 0;
+}

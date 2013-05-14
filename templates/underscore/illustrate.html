@@ -1,0 +1,60 @@
+<!-- Underscore Illustrate Templates --> 
+<script type="text/template" id="template_illustrate">
+
+  <% _.each(result.tables, function(example_table, table_index) { %>
+      <h3 class="illustrate_alias">
+          <% if (example_table["op"] == "LOStore") { %>
+            Store : 
+          <% } %>
+          <%- example_table["alias"] %>
+          <% if (example_table["notices"] && (! _.isEmpty(example_table["notices"]))) {  %>
+          &nbsp;*
+          <% } %>
+      </h3>
+      <table class="table table-bordered illustrate_table expandable">
+        <tbody>
+          <tr>
+            <% _.each(example_table["fields"], function(field) { %>
+              <th><%- field %></th>
+            <% }); %>
+          </tr>
+          <% _.each(example_table["data"], function(row, row_index) { %>
+            <tr>
+              <% _.each(row, function(value, item_index) { %>
+                  <% if (value) { %>
+                      <td>
+                        <div class="mortar-table-expandable-cell-wrapper">
+                          <div class="mortar-table-expandable-cell-container">
+                            <div class="mortar-table-expandable-cell-preview">
+                              <%- truncate_center(value, 30) %>
+                            </div>
+                            <div class="mortar-table-expandable-cell-content">
+                              <div data-clipboard-target="copy-<%- table_index %>-<%- row_index %>-<%- item_index %>" class="clipboard" data->Copy to Clipboard</div>
+                              <div id="copy-<%- table_index %>-<%- row_index %>-<%- item_index %>" class="illustrate_content_wrapper"><%- value %></div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                  <% } else { %>
+                      <td><div>&nbsp;</div></td>
+                  <% } %>
+              <% }); %>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% if (example_table["notices"] && (! _.isEmpty(example_table["notices"]))) {  %>
+          <% _.each(example_table["notices"], function(notice) { %>
+              <div class="alert">
+                  <a class="close" data-dismiss="alert">&times;</a>
+                  * <%- notice %>
+              </div>
+          <% }); %>
+      <% } %>
+  <% }); %>
+  <% if (result["udf_output"] && (result["udf_output"].length > 0)) {  %>
+    <h3 class="illustrate_alias">UDF Output: </h3>
+    </br>
+    <pre id="illustrate_udf_output"><%- result["udf_output"] %></pre>
+  <% } %>
+</script> 
