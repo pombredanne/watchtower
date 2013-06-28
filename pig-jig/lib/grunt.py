@@ -60,7 +60,8 @@ class Grunt():
         ps = PrintStream(os)
         params = ArrayList(script_params)
         files = ArrayList()
-        files.add(script_params_file)
+        if script_params_file:
+            files.add(script_params_file)
 
         try:
             self.grunt.parser.loadScript(script_path, params, files)

@@ -112,7 +112,6 @@ class Mortar::Local::Watcher
 
         launch_browser
       end     
-
     end
 	end
 
