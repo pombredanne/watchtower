@@ -76,6 +76,12 @@ strong {
     background: #EEEEEE;
     font-size: 14px;
 }
+.illustrate_table th, .illustrate_table td {
+    max-width: 200px;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    vertical-align:middle;
+}
 
 .illustrate_content_wrapper {
     padding: 10px 10px 10px 10px;

@@ -1,10 +1,24 @@
-require 'eventmachine'
 require 'sinatra/base'
 require 'sinatra/async'
 require 'thin'
 
 class Server < Sinatra::Base
   register Sinatra::Async
+
+  # Trap and close connections
+  trap("INT") do
+    puts "INT"
+    display "Closing open connections"
+    Server.settings.file_watchers.each do |conn|
+      conn.call()
+    end
+    Server.settings.illustrate_connections.each do |conn|
+      conn.call('{ "connection" : "closed" }')
+    end
+
+    Thin::Sever.stop()
+    EM.stop
+  end
 
   # Load the basic page 
   get '/' do

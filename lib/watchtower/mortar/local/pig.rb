@@ -65,7 +65,11 @@ class Mortar::Local::Pig
     descendants = descendants[process_id].flatten - [process_id]
 
     descendants.each do |pid|
-      Process.kill 9, pid 
+      begin
+        Process.kill 9, pid 
+      rescue Errno::ESRCH
+        # No such process, skip
+      end
     end
   end
 

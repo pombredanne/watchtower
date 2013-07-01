@@ -79,11 +79,13 @@ class Mortar::Local::Watcher
     # Startup pigjig
     @pig.startup_grunt do 
 
+
       # Create connection to pig server
       @server ||= XMLRPC::Client.new('localhost', '/RPC2', 1967 )
       @server.timeout = PIGJIG_TIMEOUT
 
       EM.run do
+
         # Startup File Watcher
         script_changed = lambda { |modified, added, removed|
 
@@ -107,10 +109,12 @@ class Mortar::Local::Watcher
         pig_listener.change(&script_changed)
         pig_listener.start
 
+
         # Startup Web server
         Thin::Server.start Server, '0.0.0.0', 3000
 
         launch_browser
+
       end     
     end
 	end
