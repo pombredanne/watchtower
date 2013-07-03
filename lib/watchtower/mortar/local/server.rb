@@ -52,7 +52,6 @@ class Server < Sinatra::Base
   aget '/illustrate-results.json' do
     if settings.grunt.illustrating? or settings.illustrate_data == nil
       settings.illustrate_watchers << lambda { |data|
-        settings.illustrate_data = data
         body { data }
       }
     else

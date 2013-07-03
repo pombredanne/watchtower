@@ -123,7 +123,7 @@ ERROR
       pig_params_file_path ||= ""
 
       begin
-        return @server.call("illustrate", pig_script_path, pig_params, pig_params_file_path)
+        return @server.call("illustrate", pig_script_path, pig_params + automatic_pig_parameters, pig_params_file_path)
       rescue StandardError => e
         return e
       end

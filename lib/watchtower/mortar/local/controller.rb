@@ -67,6 +67,7 @@ ERROR
       illustrate_subscriber_id = grunt.subscribe_to_illustrate { |illustrate_json|
         puts "Illustrate Complete"
         puts "Notifying Web Client"
+        Server.settings.illustrate_data = illustrate_json
         Server.notify(:illustrate_watchers, illustrate_json)
       }
 
