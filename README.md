@@ -29,3 +29,7 @@ This will start a file watcher over the Mortar Watchtower repo, any changes will
 ```
 $ rake clean
 ```
+
+### Known Issues ###
+
+* Watchtower hangs for up to 30 seconds when exiting on Ruby 1.8.7. This has something to do with the Thin server not closing out the connections. We've tried using our own signal trapping, but it doesn't seem to work.

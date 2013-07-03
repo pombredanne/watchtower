@@ -58,7 +58,9 @@ class Grunt():
 
         os = ByteArrayOutputStream()
         ps = PrintStream(os)
-        params = ArrayList(script_params)
+        params = ArrayList()
+        for param in script_params:
+            params.add("%s=%s" % (param['name'],param['value']))
         files = ArrayList()
         if script_params_file:
             files.add(script_params_file)

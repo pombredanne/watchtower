@@ -25,6 +25,11 @@ class Mortar::Command::Local < Mortar::Command::Base
     validate_arguments!
     script = validate_pigscript!(script_name)
     ctrl = Mortar::Local::Controller.new
-    ctrl.watch(project, script, options[:parameter], options[:param_file])
+    
+    param_file = options[:param_file]
+    # Make options nil to prevent pig_parameters from trying to add them to the hash
+    options[:param_file] = nil
+
+    ctrl.watch(project, script, pig_parameters, param_file)
   end
 end

@@ -2,23 +2,36 @@ require 'sinatra/base'
 require 'sinatra/async'
 require 'thin'
 
+module Sinatra
+  module Pollers
+    POLLER_TYPES = [:file_watchers, :illustrate_watchers]
+
+    def self.registered(app)
+      POLLER_TYPES.each do |poller|
+        app.set poller, []
+      end
+    end
+
+    # Public: Notify a given poller that something has happened
+    #
+    # poller_type - one of the POLLER_TYPES symbol
+    # *args - the arguments to be passed to the poller
+    # 
+    # Returns nothing.
+    def notify(poller_type, *args)
+      self.settings.send(poller_type).each do |poller|
+        poller.call(*args)
+      end
+      self.set poller_type, []
+    end
+  end
+
+  register Pollers
+end
+
 class Server < Sinatra::Base
   register Sinatra::Async
-
-  # Trap and close connections
-  trap("INT") do
-    puts "INT"
-    display "Closing open connections"
-    Server.settings.file_watchers.each do |conn|
-      conn.call()
-    end
-    Server.settings.illustrate_connections.each do |conn|
-      conn.call('{ "connection" : "closed" }')
-    end
-
-    Thin::Sever.stop()
-    EM.stop
-  end
+  register Sinatra::Pollers
 
   # Load the basic page 
   get '/' do
@@ -37,8 +50,9 @@ class Server < Sinatra::Base
   #
   # Returns illustrate json (eventually)
   aget '/illustrate-results.json' do
-    if settings.is_illustrating or settings.illustrate_data == nil
-      settings.illustrate_connections << lambda { |data|
+    if settings.grunt.illustrating? or settings.illustrate_data == nil
+      settings.illustrate_watchers << lambda { |data|
+        settings.illustrate_data = data
         body { data }
       }
     else
@@ -64,10 +78,4 @@ Server.set(:resource_locations, {
   "error_template" => File.expand_path("../../../../../templates/underscore/error.html", __FILE__)
 })
 
-Server.set :is_illustrating, false
-Server.set :illustrate_queued, false
 Server.set :illustrate_data, nil
-
-# asynchrnous connections, Array of procs and lambdas
-Server.set :illustrate_connections, []
-Server.set :file_watchers, []
