@@ -17,6 +17,8 @@ require "mortar/local/pig"
 require "xmlrpc/client"
 require "eventmachine"
 
+require "json"
+
 # Delegate class to provide pig functionality
 class Mortar::Local::Grunt <  Mortar::Local::Pig
   class HandledError < StandardError; end
@@ -135,8 +137,13 @@ ERROR
       safe_pigjig_call do
         raise_async_if_error(illustrate_json_or_error)
 
+        # Load latest version of the script
+        script_contents = File.open(pig_script_path, "rb").read
+        illustrate_json = JSON.parse(illustrate_json_or_error)
+        illustrate_json["script"] = script_contents
+
         # Notify subscribers
-        @illustrate_subscribers.push(illustrate_json_or_error)
+        @illustrate_subscribers.push(JSON.generate(illustrate_json))
 
         if illustrate_queued?
           EM.next_tick do

@@ -1,60 +1,73 @@
 <!-- Underscore Illustrate Templates --> 
 <script type="text/template" id="template_illustrate">
-
-  <% _.each(result.tables, function(example_table, table_index) { %>
-      <h3 class="illustrate_alias">
-          <% if (example_table["op"] == "LOStore") { %>
-            Store : 
-          <% } %>
-          <%- example_table["alias"] %>
-          <% if (example_table["notices"] && (! _.isEmpty(example_table["notices"]))) {  %>
-          &nbsp;*
-          <% } %>
-      </h3>
-      <table class="table table-bordered illustrate_table expandable">
-        <tbody>
-          <tr>
-            <% _.each(example_table["fields"], function(field) { %>
-              <th><%- field %></th>
-            <% }); %>
+  <% var line_number = 1; %>
+  <div class="file">
+    <div class="meta">
+      File.pig
+    </div>
+    <table class="file-data">
+      <% _.each(splits, function(split, split_index) { %>
+        <% _.each(split.text.split("\n"), function(line) { %>
+          <tr class="line">
+            <td class="line-number"><%= line_number %></td>
+            <td class="line-code"><%= line %></td>
           </tr>
-          <% _.each(example_table["data"], function(row, row_index) { %>
-            <tr>
-              <% _.each(row, function(value, item_index) { %>
-                  <% if (value) { %>
-                      <td>
-                        <div class="mortar-table-expandable-cell-wrapper">
-                          <div class="mortar-table-expandable-cell-container">
-                            <div class="mortar-table-expandable-cell-preview">
-                              <%- truncate_center(value, 30) %>
-                            </div>
-                            <div class="mortar-table-expandable-cell-content">
-                              <div data-clipboard-target="copy-<%- table_index %>-<%- row_index %>-<%- item_index %>" class="clipboard" data->Copy to Clipboard</div>
-                              <div id="copy-<%- table_index %>-<%- row_index %>-<%- item_index %>" class="illustrate_content_wrapper"><%- value %></div>
+          <% line_number += 1 %>
+        <% }); %>
+
+        <tr class="line-buffer">
+          <td class="line-number"><div>&nbsp;</div></td>
+        </tr>
+        <tr class="inline-illustrate-data preview">
+          <td colspan="2">
+            <table class="illustrate-data">
+              <thead>
+                <tr>
+                  <% _.each(split.table["fields"], function(field) { %>
+                    <th><%- field %></th>
+                  <% }); %>
+                  <!-- For spacing issues -->
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% _.each(split.table.data, function(row, row_index) { %>
+                  <tr>
+                    <% _.each(row, function(value, item_index) { %>
+                      <% if (value) { %>
+                        <td>
+                          <div class="mortar-table-expandable-cell-wrapper">
+                            <div class="mortar-table-expandable-cell-container">
+                              <div class="mortar-table-expandable-cell-preview">
+                                <%- Mortar.Util.truncate(value, 30) %>
+                              </div>
+                              <div class="mortar-table-expandable-cell-content">
+                                <div id="copy-<%- split_index %>-<%- row_index %>-<%- item_index %>" class="illustrate_content_wrapper"><%- value %></div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                  <% } else { %>
-                      <td><div>&nbsp;</div></td>
-                  <% } %>
-              <% }); %>
-            </tr>
-          <% }); %>
-        </tbody>
-      </table>
-      <% if (example_table["notices"] && (! _.isEmpty(example_table["notices"]))) {  %>
-          <% _.each(example_table["notices"], function(notice) { %>
-              <div class="alert">
-                  <a class="close" data-dismiss="alert">&times;</a>
-                  * <%- notice %>
-              </div>
-          <% }); %>
-      <% } %>
-  <% }); %>
-  <% if (result["udf_output"] && (result["udf_output"].length > 0)) {  %>
+                        </td>
+                      <% } else { %>
+                        <td><div>&nbsp;</div></td>
+                      <% } %>
+                    <% }); %>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+
+        <tr class="line-buffer">
+          <td class="line-number"><div>&nbsp;</div></td>
+        </tr>
+
+      <% }); %>
+    </table>
+  </div>
+  <% if (udf_output && (udf_output.length > 0)) {  %>
     <h3 class="illustrate_alias">UDF Output: </h3>
     </br>
-    <pre id="illustrate_udf_output"><%- result["udf_output"] %></pre>
+    <pre id="illustrate_udf_output"><%- udf_output %></pre>
   <% } %>
 </script> 

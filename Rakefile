@@ -75,7 +75,14 @@ end
 
 desc "Compile CTags for #{PLUGIN_NAME} Plugin"
 task :ctags do
-  %x(ctags -R --exclude=css --exclude=flash --exclude=.git *)
+  %x(ctags -R --exclude=bundle --exclude=js --exclude=css --exclude=flash --exclude=.git *)
+  files = FileList["js/**/*.js"].select { |file|
+    ! file.start_with?("js/lib")
+  }
+  puts "Generating ctags for files:"
+  puts files
+  system("jsctags #{files.join(" ")} -W debug")
+  puts "Done generating ctags"
 end
 
 
