@@ -118,6 +118,8 @@ table.illustrate-data thead tr:first-child,
 .inline-illustrate-data > td {
   padding: 0;
   background: rgb(235,235,235);
+}
+.illustrate-shadow-wrapper {
   position:relative;
 }
 .illustrate-shadow {
