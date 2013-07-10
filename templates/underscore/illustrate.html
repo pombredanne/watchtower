@@ -3,7 +3,7 @@
   <% var line_number = 1; %>
   <div class="file">
     <div class="meta">
-      File.pig
+      <%= WATCHED_FILE %>
     </div>
     <table class="file-data">
       <% _.each(splits, function(split, split_index) { %>
@@ -18,7 +18,7 @@
         <tr class="line-buffer">
           <td class="line-number"><div>&nbsp;</div></td>
         </tr>
-        <tr class="inline-illustrate-data preview">
+        <tr class="inline-illustrate-data <%= split['state'] || 'preview' %>">
           <td colspan="2">
             <table class="illustrate-data">
               <thead>
@@ -34,7 +34,7 @@
                 <% _.each(split.table.data, function(row, row_index) { %>
                   <tr>
                     <% _.each(row, function(value, item_index) { %>
-                      <% if (value) { %>
+                      <% if (value.trim() != "") { %>
                         <td>
                           <div class="mortar-table-expandable-cell-wrapper">
                             <div class="mortar-table-expandable-cell-container">
@@ -48,13 +48,25 @@
                           </div>
                         </td>
                       <% } else { %>
-                        <td><div>&nbsp;</div></td>
+                        <td>
+                          <div class="mortar-table-expandable-cell-wrapper">
+                            <div class="mortar-table-expandable-cell-container">
+                              <div class="mortar-table-expandable-cell-preview">
+                                &nbsp;
+                              </div>
+                              <div class="mortar-table-expandable-cell-content">
+                                <div id="copy-<%- split_index %>-<%- row_index %>-<%- item_index %>" class="illustrate_content_wrapper"><%- value %></div>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
                       <% } %>
                     <% }); %>
                   </tr>
                 <% }); %>
               </tbody>
             </table>
+            <div class="illustrate-shadow"></div>
           </td>
         </tr>
 
