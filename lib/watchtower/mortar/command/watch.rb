@@ -1,14 +1,15 @@
 require "watchtower/mortar/local/controller"
 require "mortar/command/base"
 
-# run select pig commands on your local machine
+# watch data flow through your script as you're writing
 #
-class Mortar::Command::Local < Mortar::Command::Base
+class Mortar::Command::Watch < Mortar::Command::Base
 
 
-  # local:watch PIGSCRIPT
+  # watch PIGSCRIPT
   #
-  # Watch a local script for changes, and illustrate test 
+  # Watch a local script for changes, and illustrate data flowing through
+  # while you work.
   #
   # -p, --parameter NAME=VALUE  # Set a pig parameter value in your script.
   # -f, --param-file PARAMFILE  # Load pig parameter values from a file.
@@ -16,8 +17,8 @@ class Mortar::Command::Local < Mortar::Command::Base
   # Examples:
   #
   #    Check the pig syntax of the generate_regression_model_coefficients script locally.
-  #        $ mortar local:watch generate_regression_model_coefficients
-  def watch
+  #        $ mortar watch generate_regression_model_coefficients
+  def index
     script_name = shift_argument
     unless script_name
       error("Usage: mortar local:watch PIGSCRIPT\nMust specify PIGSCRIPT.")
@@ -26,7 +27,7 @@ class Mortar::Command::Local < Mortar::Command::Base
     script = validate_pigscript!(script_name)
     ctrl = Mortar::Local::Controller.new
     
-    param_file = options[:param_file]
+    param_file = File.expand_path(options[:param_file], Dir.pwd)
     # Make options nil to prevent pig_parameters from trying to add them to the hash
     options[:param_file] = nil
 

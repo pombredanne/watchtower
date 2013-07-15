@@ -85,6 +85,14 @@ var Mortar = Mortar || {};
       }
 
     };
+
+    // When the document has stopped scrolling 
+    // updated the last hovered object just in case the
+    // cursor is still hovering it.
+    var _lastHoveredCell = null;
+    Mortar.Util.onScrollStop(function(e) {
+      $(_lastHoveredCell).css('height', $(_lastHoveredCell).height());
+    });
     
     return {
       /* Public: Update the current illustrate viewer with 
@@ -109,7 +117,18 @@ var Mortar = Mortar || {};
           udf_output : illustrate_data['udf_output'],
         });
         $("#illustrate_content").html(illustrate_html);
-        $('table.illustrate-data td').mortarTableExpandableCell();
+
+        $("table.illustrate-data td.mortar-table-expandable-cell").hover(function() {
+          if(!Mortar.Util.isScrolling()) {
+            $(this).css('height', $(this).height());
+          } else {
+            // Set the lastHoveredCell variable, so it's height will be set 
+            // when scrolling stops
+            _lastHoveredCell = this;
+          }
+        });
+        $.mortarTableExpandableCell("delete_all");
+        $('table.illustrate-data td.mortar-table-expandable-cell').mortarTableExpandableCell();
         $('table.illustrate-data thead').click(clickAlias);
       },
     }

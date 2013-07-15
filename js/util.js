@@ -2,6 +2,7 @@ var Mortar = Mortar || {};
 (function(Mortar) {
   Mortar.Util = (function() {
 
+
     return {
 
       /* Public: Truncate the given text to the maximum number of characters
@@ -26,6 +27,43 @@ var Mortar = Mortar || {};
             token +
             text.slice(mid_point + right_chars_to_remove);
       },
+
+      /* Public: A function to be called when the pages stops scrolling
+       *
+       * note: events are debounced by SCROLL_STOP_DELAY milliseconds
+       *
+       * cb - the function to be called
+       */
+       onScrollStop : (function() {
+        var SCROLL_STOP_DELAY = 150;
+        var callbacks = [];
+
+        var debounced_stop = _.debounce(function(e) {
+          $("body").addClass("not-scrolling");
+          for(var i = 0, length = callbacks.length; i < length; i++) {
+            callbacks[i](e);
+          }
+        }, SCROLL_STOP_DELAY);
+
+        $(document).scroll(function(e) {
+          if($("body").hasClass("not-scrolling")) {
+            $("body").removeClass("not-scrolling");
+          }
+          debounced_stop(e);
+        });
+
+        return function(cb) {
+          callbacks.push(cb);
+        };
+      })(),
+
+      /* Public: Checks if body element is scrolling
+      *
+      * Returns boolean.
+      */
+      isScrolling : function() {
+        return !$("body").hasClass("not-scrolling")
+      }
     };
   })();
 })(Mortar);

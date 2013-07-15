@@ -1,0 +1,63 @@
+table.illustrate-data {
+  height:100%;
+  border-spacing:0;
+}
+td.mortar-table-expandable-cell {
+  height:100%;
+  background:rgb(250,250,250);
+  vertical-align:top;
+}
+.mortar-table-expandable-cell-wrapper {
+  background-color: inherit;
+}
+body.not-scrolling td.mortar-table-expandable-cell:hover .mortar-table-expandable-cell-wrapper,
+.mortar-table-expandable-cell-wrapper {
+  height:100%;
+  position:relative;
+}
+body.not-scrolling td.mortar-table-expandable-cell:hover .mortar-table-expandable-cell-shadow {
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  pointer-events:none;
+  box-shadow: 0 0 8px 0px #999;
+}
+.mortar-table-expandable-cell-container {
+  background-color: inherit;
+}
+.mortar-table-expandable-cell-container {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.active .mortar-table-expandable-cell-container {
+  display: block;
+  box-shadow: 0 0 8px 0px #999;
+  position: absolute;
+  z-index: 6;
+  overflow: hidden;
+  cursor: default;
+}
+.mortar-table-expandable-cell-preview,
+.mortar-table-expandable-cell-content {
+  padding: 6px 8px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* By default this is fully expanded, but hidden.  */
+/* mortar-table.js will flip the display and opacity properties */
+.mortar-table-expandable-cell-content {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right:0;
+  opacity: 0;
+}

@@ -7,7 +7,7 @@ body {
     line-height: 20px;
     color: #333333;
 }
-.alias, strong {
+strong {
     font-family: Helvetica, Arial, sans-serif;
     font-weight:bold;
 }
@@ -119,6 +119,10 @@ table.illustrate-data thead tr:first-child,
   padding: 0;
   background: rgb(235,235,235);
 }
+.table-scroll-wrapper {
+  overflow-x:auto;
+  width:938px;
+}
 .illustrate-shadow-wrapper {
   position:relative;
 }
@@ -133,28 +137,33 @@ table.illustrate-data thead tr:first-child,
   border-top: 1px solid rgb(150,150,150);
   border-bottom: 1px solid rgb(150,150,150);
 }
-.inline-illustrate-data table.illustrate-data:after {
+.inline-illustrate-data .table-notifier .table-notifier-arrow {
   height:16px;
   width:16px;
   background-position: 0 0;
   background-image: url('/images/arrows.png');
-  content : '';
+}
+.inline-illustrate-data .table-notifier {
+  cursor:pointer;
   position:absolute;
   top:0;
   left:100%;
-  margin-top: 6px;
-  margin-left: -25px;
+  padding: 7px 8px 5px 8px;
+  margin-left: -32px;
+  background: rgb(174,174,174);
+  border-left: 1px solid rgb(80,80,80);
+  border-bottom: 1px solid rgb(80,80,80);
 }
-.inline-illustrate-data.preview table.illustrate-data:after {
+.inline-illustrate-data.preview .table-notifier .table-notifier-arrow {
   background-position: -16px 0;
 }
-.inline-illustrate-data.selected table.illustrate-data:after {
+.inline-illustrate-data.selected .table-notifier .table-notifier-arrow {
   background-position: -32px 0;
 }
 table.illustrate-data {
   min-width: 100%; 
   table-layout:fixed;
-  position:relative;
+  empty-cells:show;
 }
 table.illustrate-data thead {
   background: rgb(174,174,174);
@@ -166,7 +175,6 @@ table.illustrate-data th:last-child {
 }
 table.illustrate-data td, 
 table.illustrate-data th {
-  padding:0;
   max-width: 250px;
   text-overflow:ellipsis;
   word-wrap:break-word;
@@ -179,7 +187,6 @@ table.illustrate-data th {
   padding: 4px 10px;
   border-bottom: 1px solid rgb(140,140,140);
   border-right: 1px solid rgb(112,112,112);
-  position:relative;
 }
 table.illustrate-data thead th:first-child { position: relative; }
 table.illustrate-data thead th:first-child:before {
@@ -209,91 +216,14 @@ table.file-data td.line-number {
   color: rgb(90,90,90);
 }
 table.file-data td.line-code {
+  font-family: menlo;
+  font-size:14px;
   white-space:pre;
   padding: 0 8px;
   background-color: rgb(250,250,250);
 }
-
-td.mortar-table-expandable-cell  {
-  padding: 0;
-  background-color: rgb(244,244,244);
-}
-.mortar-table-expandable-cell-preview  {
-  padding: 6px 8px;
-  width: 100%;
-  height: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.mortar-table-expandable-cell-content  {
-  display: none;
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  padding: 6px 8px;
-  width: 100%;
-  height: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-.mortar-table-expandable-cell-content textarea {
-  resize: none;
-  width: 234px;
-  height: 146px;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-.mortar-table-expandable-cell-wrapper {
-  position: relative;
-  height: 100%;
-  background-color: inherit;
-}
-
-.mortar-table-expandable-cell-container {
-  background-color: inherit;
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-td .mortar-table-expandable-cell-container {
-  background-color: rgb(250,250,250);
-}
-table.illustrate-data td:hover .mortar-table-expandable-cell-container {
-  box-shadow: 0 0 8px 0px #333;
-  z-index: 1;
-}
-
-.active.mortar-table-expandable-cell-container {
-  display: block;
-  box-shadow: 0 0 8px 0px #999;
-  position: absolute;
-  z-index: 6;
-  overflow: hidden;
-  cursor: default;
-}
-
-.illustrate_content_wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  padding: 6px 8px;
-  overflow: auto;
-  margin: 0;
-  font-size: 12px;
-  line-height: 15px;
-  word-wrap: break-word;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  z-index: 1;
+table.file-data td.line-code .alias {
+  font-family: menlo;
+  font-weight: bold;
+  font-size: 16px;
 }

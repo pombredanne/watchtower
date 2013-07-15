@@ -23,6 +23,12 @@ require "json"
 class Mortar::Local::Grunt <  Mortar::Local::Pig
   class HandledError < StandardError; end
 
+  # List of PIGOPTS property files in Mortar Local
+  DEFAULT_PIGOPTS_FILES = %w(
+    /pig/conf/pig-hawk-global.properties
+    /pig/conf/pig-cli-local-dev.properties
+  )
+
   # Public: The name of the pigjig log file
   PIGJIG_LOG_FILE = "watchtower-pigjig-server.log"
 
@@ -253,8 +259,12 @@ ERROR
     template_params['local_install_dir'] = local_install_directory
     template_params['pig_jig_directory'] = pig_jig_directory 
     template_params['pig_opts'] = pig_options
+    template_params['default_pig_opts_files'] = DEFAULT_PIGOPTS_FILES.map { |f| 
+        File.expand_path(f, local_install_directory) 
+      }.join(",")
     template_params
   end
+
 
   # Internal: Waits until it can communicate with the server
   #

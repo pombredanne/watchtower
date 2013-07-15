@@ -13,6 +13,21 @@ var Mortar = Mortar || {};
       connection_lost && connection_lost();
     };
 
+    // Internal: Pinger to check if server is still alive
+    var pinger = function(alive_cb) {
+      $.ajax({ 
+        url: "/ping",
+        success: function() {
+          alive_cb();
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          // Ping the server to check if dead
+          pinger(wait_poller);
+        },
+        timeout: 30000 
+      });
+    };
+
     // Internal: Wait poller continually polls the server for changes
     var wait_poller = function() {
       if(stopSignaled) {
@@ -26,12 +41,8 @@ var Mortar = Mortar || {};
         },
         dataType: "json",
         error: function(jqXHR, textStatus, errorThrown) {
-          // If wait-for-change times out, retry
-          if(textStatus == "timeout") {
-            wait_poller();
-          } else {
-            error_func();
-          }
+          // Ping the server to check if dead
+          pinger(wait_poller);
         },
         timeout: 30000 
       });

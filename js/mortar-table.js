@@ -28,21 +28,19 @@
         this.element = element;
         this.options = $.extend({}, defaults, options);
         
-        
         var item = $(this.element).find(this.options.expandingSelector)
             , preview = $(item).find(this.options.previewSelector)
             , content = $(item).find(this.options.contentSelector)
             , _this = this;
-        
         item.stylestack('enable');
         preview.stylestack('enable');
         content.stylestack('enable');
         $(this.element).stylestack('enable');
-        
-        
+
         $(this.element).click( function(event) {
-            _this.open();
+          _this.open();
         });
+
         $(this.element).find(this.options.contentSelector).click( function(event) {
             event.stopPropagation();
         });      
@@ -52,19 +50,24 @@
         
     
     MortarTableExpandableCell.prototype.close = function () {
-        if (!$(this.element).find(this.options.expandingSelector).hasClass('active')) {
+        var item = $(this.element).find(this.options.expandingSelector)
+            , preview = $(item).find(this.options.previewSelector)
+            , content = $(item).find(this.options.contentSelector)
+            , _this = this;
+
+        if (!$(this.element).hasClass('active')) {
             return;
         } 
         
-        var self = this;
-        $(this.element).find(this.options.expandingSelector).stylestack('pop', function () {
-            $(this).removeClass('active'); 
-            $(self.element).stylestack('pop');
+        $(item).stylestack('pop', function () {
+            $(_this.element).removeClass('opening');
+            $(_this.element).removeClass('active'); 
+            $(_this.element).stylestack('pop');
         });
-        $(this.element).find(this.options.previewSelector).stylestack('pop');
-        $(this.element).find(this.options.contentSelector).stylestack('pop');
-        
+        $(preview).stylestack('pop');
+        $(content).stylestack('pop');
         $(this.element).trigger('MortarTableExpandableCell.Closed');
+        
     };
     
     MortarTableExpandableCell.prototype.open = function() {
@@ -74,7 +77,10 @@
             , containerStyles = _getStyleBasedOnPosition.call(this)
             , _this = this;
         
-        if(!item.hasClass('active')) {
+        
+        if(!$(this.element).hasClass('active')) {
+            $(_this.element).addClass('opening');
+
             item.css(containerStyles['containerStyle']);
 
             var wrapperWidth = $(this.element).outerWidth();
@@ -84,7 +90,7 @@
             
             // This is a hack to let the page reflow
             setTimeout(function() {
-              item.addClass('active');
+              $(_this.element).addClass('active');
               content.css('display', 'block');
               
                 item.transition(containerStyles['containerAnimatedStyle'], function() {
@@ -141,12 +147,19 @@
     };
     
     $(document).ready(function() {
-        $('body').click( _closeAllInstances );
+      $('body').click( _closeAllInstances );
+      $(document).keyup(function(e) {
+        if (e.keyCode == 27) { _closeAllInstances() }   // esc
+      });
     });
-    $(document).keyup(function(e) {
-      if (e.keyCode == 27) { _closeAllInstances() }   // esc
-    });
-        
+
+    $[pluginName] = function(action) {
+      if(action == "delete_all") {
+        allInstances = [];
+        return this;
+      }
+    };
+
     $.fn[pluginName] = function (option) {
         return this.each(function () {
             var $this = $(this)
@@ -154,8 +167,9 @@
                 , options = typeof option == 'object' && option
                 , action = typeof option == 'string' && option
             if (!data) $.data(this, 'plugin_' + pluginName, (data = new MortarTableExpandableCell(this, options)));
-            if (action) data[action]();
-        
+            if (action && data.hasOwnProperty(action)) {
+              data[action]();
+            } 
         });
     };
         

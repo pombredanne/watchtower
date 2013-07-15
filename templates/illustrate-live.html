@@ -4,12 +4,13 @@
     <link rel="shortcut icon" href="/images/favicon.ico">
     <link rel="stylesheet" href="/css/base.css" type="text/css" />
     <link rel="stylesheet" href="/css/illustrate.css" type="text/css" />
+    <link rel="stylesheet" href="/css/mortar-table.css" type="text/css" />
     <script type="text/javascript">
       var WATCHED_FILE = "<%= settings.title.capitalize %>";
     </script>
   </head>
   
-  <body>
+  <body class="not-scrolling">
   
   <div class="navbar">
     <div class="navbar-inner">
@@ -40,11 +41,11 @@
   <script src="/js/lib/zero_clipboard.js"></script>
   <script src="/js/lib/underscore.js"></script>
   <script src="/js/mortar-table.js"></script>
+  <script src="/js/util.js"></script>
   <script src="/js/illustrate-live.js"></script>
   <script src="/js/illustrate-watcher.js"></script>
   <script src="/js/illustrate-viewer.js"></script>
   <script src="/js/error_panel.js"></script>
-  <script src="/js/util.js"></script>
   <%= @illustrate_templates %>
   <%= @error_templates %>
   </body>

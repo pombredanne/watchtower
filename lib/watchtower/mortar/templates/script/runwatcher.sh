@@ -3,7 +3,8 @@
 set -e
 
 export CLASSPATH=<%= @classpath %>
-export PIG_OPTS="<% @pig_opts.each do |k,v| %>-D<%= k %>=<%= v %> <% end %>"
+export PIG_OPTS="<% @pig_opts.each do |k,v| %>-J-D<%= k %>=<%= v %> <% end %>"
+export DEFAULT_PIG_OPTS_FILES="<%= @default_pig_opts_files %>"
 export LOG4J_CONF=<%= @local_install_dir %>/pig/conf/log4j-cli-local-dev.properties
 
 # UDF paths are relative to this direectory

@@ -2,6 +2,7 @@ from com.mortardata.hawk import HawkScriptError
 from org.apache.pig.tools.grunt import Grunt as PigGrunt
 from org.apache.pig import Main as PigMain
 from org.apache.pig.impl import PigContext
+from org.apache.pig.impl.util import PropertiesUtil
 from org.apache.pig import ExecType
 from org.apache.commons.lang.exception import ExceptionUtils
 from java.util import Properties
@@ -24,6 +25,12 @@ class Grunt():
 
         # Setup pig
         props = Properties()
+
+        props.putAll(javasystem.getProperties())
+
+        for f in os.environ.get("DEFAULT_PIG_OPTS_FILES").split(","):
+            PropertiesUtil.loadPropertiesFromFile(props, f) 
+
         props.setProperty('log4jconf', os.environ.get('LOG4J_CONF'))
         pigOpts = os.environ.get('PIG_OPTS')
         if pigOpts:
