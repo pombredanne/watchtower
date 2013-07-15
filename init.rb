@@ -13,5 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
 require File.join(File.dirname(__FILE__), "bundle/bundler/setup")
 require "watchtower/mortar/command/watch"
