@@ -19,7 +19,7 @@ $ gem install bundler
 To start watching a script:
 
 ```
-$ mortar local:watch SCRIPT_NAME
+$ mortar watch SCRIPT_NAME
 ```
 
 ### Development ###
