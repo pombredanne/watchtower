@@ -11,7 +11,7 @@ td.mortar-table-expandable-cell {
   background-color: inherit;
 }
 body.not-scrolling td.mortar-table-expandable-cell:hover .mortar-table-expandable-cell-wrapper,
-.mortar-table-expandable-cell-wrapper {
+.active .mortar-table-expandable-cell-wrapper {
   height:100%;
   position:relative;
 }
@@ -27,7 +27,7 @@ body.not-scrolling td.mortar-table-expandable-cell:hover .mortar-table-expandabl
 .mortar-table-expandable-cell-container {
   background-color: inherit;
 }
-.mortar-table-expandable-cell-container {
+.opening .mortar-table-expandable-cell-container {
   position: relative;
   top: 0;
   left: 0;
@@ -60,4 +60,5 @@ body.not-scrolling td.mortar-table-expandable-cell:hover .mortar-table-expandabl
   bottom: 0;
   right:0;
   opacity: 0;
+  overflow-y:auto;
 }

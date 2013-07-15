@@ -71,11 +71,6 @@ strong {
 .navbar .brand .logo {
     width:150px;
 }
-#illustrate_content {
-  position:relative;
-  overflow-x:auto;
-  padding: 0 0 40px 0;
-}
 
 .file {
   border-radius: 2px;
@@ -148,8 +143,8 @@ table.illustrate-data thead tr:first-child,
   position:absolute;
   top:0;
   left:100%;
-  padding: 7px 8px 5px 8px;
-  margin-left: -32px;
+  padding: 5px 5px 6px 5px;
+  margin-left: -27px;
   background: rgb(174,174,174);
   border-left: 1px solid rgb(80,80,80);
   border-bottom: 1px solid rgb(80,80,80);
@@ -208,6 +203,7 @@ table.file-data tr.line-buffer td.line-number {
   line-height: 10px;
 }
 table.file-data td.line-number {
+  vertical-align:top;
   width: 1%;
   text-align:right;
   line-height:22px;
@@ -216,6 +212,9 @@ table.file-data td.line-number {
   color: rgb(90,90,90);
 }
 table.file-data td.line-code {
+  line-height:18px;
+  max-width:887px;
+  word-wrap: break-word;
   font-family: menlo;
   font-size:14px;
   white-space:pre;

@@ -11,7 +11,9 @@
             wrapperSelector : '.mortar-table-expandable-cell-wrapper',
             expandedContainerStyle : {
                 'width'     : 250,
-                'height'    : 180
+                'height'    : 180,
+                'display'   : 'block',
+                'position'  : 'absolute',
             },
             expandedPreviewStyle : {
                 'opacity'   : '0'
@@ -121,7 +123,6 @@
         containerAnimatedStyle['margin-left'] = -(width / 2);
         containerAnimatedStyle['margin-top'] = -(height / 2);
 
-        
         if (top + containerAnimatedStyle['margin-top'] + height > boundHeight) {
             containerAnimatedStyle['margin-top'] = -top + boundHeight - height - this.options.expansionBoundPadding;
         }

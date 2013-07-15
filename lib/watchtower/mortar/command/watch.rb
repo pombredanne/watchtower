@@ -43,7 +43,10 @@ class Mortar::Command::Watch < Mortar::Command::Base
     script = validate_pigscript!(script_name)
     ctrl = Mortar::Local::Controller.new
     
-    param_file = File.expand_path(options[:param_file], Dir.pwd)
+    param_file = nil
+    if options[:param_file]
+      param_file = File.expand_path(options[:param_file], Dir.pwd)
+    end
     # Make options nil to prevent pig_parameters from trying to add them to the hash
     options[:param_file] = nil
 
