@@ -5,7 +5,13 @@ Mortar Watchtower is a plugin for the [Mortar Gem](https://github.com/mortardata
 ### Installation ###
 
 ```
-$ mortar plugins:install git@github.com:mortardata/watchtower.git
+$ mortar plugins:install https://github.com/mortardata/watchtower.git
+```
+
+You also need to make sure you have bundler installed:
+
+```
+$ gem install bundler
 ```
 
 ### Usage ###
