@@ -27,13 +27,6 @@ body.not-scrolling td.mortar-table-expandable-cell:hover .mortar-table-expandabl
 .mortar-table-expandable-cell-container {
   background-color: inherit;
 }
-.opening .mortar-table-expandable-cell-container {
-  position: relative;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
 .active .mortar-table-expandable-cell-container {
   display: block;
   box-shadow: 0 0 8px 0px #999;

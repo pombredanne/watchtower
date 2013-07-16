@@ -21,8 +21,7 @@ var Mortar = Mortar || {};
           alive_cb();
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          // Ping the server to check if dead
-          pinger(wait_poller);
+          // Server Dead
         },
         timeout: 30000 
       });
@@ -36,8 +35,11 @@ var Mortar = Mortar || {};
       $.ajax({ 
         url: "/wait-for-change.json",
         success: function() {
-          get_illustrate();
-          wait_poller();
+          // Prevent Callstack size exceeded error
+          setTimeout(function() {
+            get_illustrate();
+            wait_poller();
+          }, 0);
         },
         dataType: "json",
         error: function(jqXHR, textStatus, errorThrown) {

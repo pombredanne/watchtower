@@ -75,7 +75,7 @@ strong {
 .file {
   border-radius: 2px;
   border: 1px solid rgb(175,175,175);
-  overflow:auto;
+  overflow-x:hidden;
 }
 .file .meta {
   width:100%;
@@ -212,12 +212,13 @@ table.file-data td.line-number {
   color: rgb(90,90,90);
 }
 table.file-data td.line-code {
-  line-height:18px;
+  line-height:20px;
   max-width:887px;
   word-wrap: break-word;
+  word-break: break-all;
   font-family: menlo;
   font-size:14px;
-  white-space:pre;
+  white-space:pre-wrap;
   padding: 0 8px;
   background-color: rgb(250,250,250);
 }

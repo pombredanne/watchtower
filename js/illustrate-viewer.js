@@ -118,7 +118,8 @@ var Mortar = Mortar || {};
         });
         $("#illustrate_content").html(illustrate_html);
 
-        $("table.illustrate-data td.mortar-table-expandable-cell").hover(function() {
+        $.mortarTableExpandableCell("delete_all");
+        var cell_hover = function() {
           if(!Mortar.Util.isScrolling()) {
             $(this).css('height', $(this).height());
           } else {
@@ -126,9 +127,11 @@ var Mortar = Mortar || {};
             // when scrolling stops
             _lastHoveredCell = this;
           }
+        };
+        $('table.illustrate-data td.mortar-table-expandable-cell').each(function() {
+          $(this).mortarTableExpandableCell();
+          $(this).hover(cell_hover);
         });
-        $.mortarTableExpandableCell("delete_all");
-        $('table.illustrate-data td.mortar-table-expandable-cell').mortarTableExpandableCell();
         $('table.illustrate-data thead').click(clickAlias);
       },
     }
