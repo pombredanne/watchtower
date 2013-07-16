@@ -128,8 +128,11 @@ var Mortar = Mortar || {};
             _lastHoveredCell = this;
           }
         };
+        var cell_clicked = function() {
+          $(this).mortarTableExpandableCell('open');
+        };
         $('table.illustrate-data td.mortar-table-expandable-cell').each(function() {
-          $(this).mortarTableExpandableCell();
+          $(this).click(cell_clicked);
           $(this).hover(cell_hover);
         });
         $('table.illustrate-data thead').click(clickAlias);
