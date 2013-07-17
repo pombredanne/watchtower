@@ -19,7 +19,8 @@ require "watchtower/mortar/local/grunt"
 require "mortar/local/controller"
 
 class Mortar::Local::Controller
-  def watch(project, pig_script, pig_params, pig_param_file, port=3000)
+  def watch(project, pig_script, pig_params, pig_param_file, port)
+    port ||= 3000
     require_aws_keys
     install_and_configure
     grunt = Mortar::Local::Grunt.new()
