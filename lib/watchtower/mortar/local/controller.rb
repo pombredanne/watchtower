@@ -19,7 +19,7 @@ require "watchtower/mortar/local/grunt"
 require "mortar/local/controller"
 
 class Mortar::Local::Controller
-  def watch(project, pig_script, pig_params, pig_param_file)
+  def watch(project, pig_script, pig_params, pig_param_file, port=3000)
     require_aws_keys
     install_and_configure
     grunt = Mortar::Local::Grunt.new()
@@ -29,7 +29,7 @@ class Mortar::Local::Controller
     Server.set :title, pig_script.name + ".pig"
     Server.set :grunt, grunt
     begin
-      server = Thin::Server.new(Server, '0.0.0.0', 3000, :signals => false)
+      server = Thin::Server.new(Server, '0.0.0.0', port, :signals => false)
     rescue => e
       raise Mortar::Local::Grunt::HandledError, <<-ERROR
 Seems as though an instance of watchtower is already running.
@@ -88,7 +88,7 @@ ERROR
       }
 
       server.start
-      launch_browser
+      launch_browser(port)
 
       grunt.illustrate(pig_script.path, pig_params, pig_param_file)
     end
@@ -102,9 +102,9 @@ ERROR
   # verified the pigjig server has started
   #
   # Returns nothing
-  def launch_browser 
+  def launch_browser(port) 
     require "launchy"
-    Launchy.open("http://localhost:3000")
+    Launchy.open("http://localhost:#{port}")
   end
 
   def styled_error(error, message='Watchtower internal error.')

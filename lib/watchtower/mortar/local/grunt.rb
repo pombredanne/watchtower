@@ -284,7 +284,12 @@ ERROR
       end
     end
 
-    raise "Pig server took too long to start!"
+    raise <<-ERR
+Uhoh, looks like the Pig server didn't start.
+
+Check the logs to see what went wrong. Logs can be found at:
+#{local_log_dir}/#{PIGJIG_LOG_FILE}
+ERR
   end
 
 end

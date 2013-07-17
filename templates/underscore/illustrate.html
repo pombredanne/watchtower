@@ -19,55 +19,57 @@
           <td class="line-number">&nbsp;</td>
           <td class="line-code">&nbsp;</td>
         </tr>
-        <tr class="inline-illustrate-data <%= split['state'] || 'preview' %>">
-          <td colspan="2">
-            <div class="illustrate-shadow-wrapper">
-              <div class="table-notifier">
-                <div class="table-notifier-arrow">&nbsp;</div>
-              </div>
-              <div class="table-scroll-wrapper">
-                <table class="illustrate-data">
-                  <thead>
-                    <tr>
-                      <% _.each(split.table["fields"], function(field) { %>
-                        <th><%- field %></th>
-                      <% }); %>
-                      <!-- For spacing issues -->
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% _.each(split.table.data, function(row, row_index) { %>
+        <% if(split.table) { %>
+          <tr class="inline-illustrate-data <%= split['state'] || 'preview' %>">
+            <td colspan="2">
+              <div class="illustrate-shadow-wrapper">
+                <div class="table-notifier">
+                  <div class="table-notifier-arrow">&nbsp;</div>
+                </div>
+                <div class="table-scroll-wrapper">
+                  <table class="illustrate-data">
+                    <thead>
                       <tr>
-                        <% _.each(row, function(value, item_index) { %>
-                          <% if (value.trim() != "") { %>
-                            <td class="mortar-table-expandable-cell">
-                              <div class="mortar-table-expandable-cell-wrapper">
-                                <div class="mortar-table-expandable-cell-container">
-                                  <div class="mortar-table-expandable-cell-preview">
-                                    <%- Mortar.Util.truncate(value, 30) %>
-                                  </div>
-                                  <div class="mortar-table-expandable-cell-content">
-                                    <%- value %>
-                                  </div>
-                                </div>
-                                <div class="mortar-table-expandable-cell-shadow"></div>
-                              </div>
-                            </td>
-                          <% } else { %>
-                            <td>
-                            </td>
-                          <% } %>
+                        <% _.each(split.table["fields"], function(field) { %>
+                          <th><%- field %></th>
                         <% }); %>
+                        <!-- For spacing issues -->
+                        <th></th>
                       </tr>
-                    <% }); %>
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      <% _.each(split.table.data, function(row, row_index) { %>
+                        <tr>
+                          <% _.each(row, function(value, item_index) { %>
+                            <% if (value.trim() != "") { %>
+                              <td class="mortar-table-expandable-cell">
+                                <div class="mortar-table-expandable-cell-wrapper">
+                                  <div class="mortar-table-expandable-cell-container">
+                                    <div class="mortar-table-expandable-cell-preview">
+                                      <%- Mortar.Util.truncate(value, 30) %>
+                                    </div>
+                                    <div class="mortar-table-expandable-cell-content">
+                                      <%- value %>
+                                    </div>
+                                  </div>
+                                  <div class="mortar-table-expandable-cell-shadow"></div>
+                                </div>
+                              </td>
+                            <% } else { %>
+                              <td>
+                              </td>
+                            <% } %>
+                          <% }); %>
+                        </tr>
+                      <% }); %>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="illustrate-shadow"></div>
               </div>
-              <div class="illustrate-shadow"></div>
-            </div>
-          </td>
-        </tr>
+            </td>
+          </tr>
+        <% } %>
 
         <tr class="line-buffer">
           <td class="line-number">&nbsp;</td>

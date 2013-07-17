@@ -29,6 +29,7 @@ class Mortar::Command::Watch < Mortar::Command::Base
   #
   # -p, --parameter NAME=VALUE  # Set a pig parameter value in your script.
   # -f, --param-file PARAMFILE  # Load pig parameter values from a file.
+  # -t, --port PORT  # What port the pig server should run on.
   #
   # Examples:
   #
@@ -50,6 +51,6 @@ class Mortar::Command::Watch < Mortar::Command::Base
     # Make options nil to prevent pig_parameters from trying to add them to the hash
     options[:param_file] = nil
 
-    ctrl.watch(project, script, pig_parameters, param_file)
+    ctrl.watch(project, script, pig_parameters, param_file, options[:port])
   end
 end
