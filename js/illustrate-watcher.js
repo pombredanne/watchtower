@@ -1,7 +1,7 @@
 var Mortar = Mortar || {};
 (function(Mortar) {
   Mortar.IllustrateWatcher = (function() {
-    var stopSignaled = false
+    var watching = false
         , on_success = null 
         , on_failure = null 
         , work_started = null 
@@ -10,6 +10,7 @@ var Mortar = Mortar || {};
 
     // Default error function
     var error_func = function() {
+      watching = false;
       connection_lost && connection_lost();
     };
 
@@ -17,11 +18,12 @@ var Mortar = Mortar || {};
     var pinger = function(alive_cb) {
       $.ajax({ 
         url: "/ping",
+        cache : false,
         success: function() {
           alive_cb();
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          // Server Dead
+          error_func();
         },
         timeout: 30000 
       });
@@ -29,11 +31,12 @@ var Mortar = Mortar || {};
 
     // Internal: Wait poller continually polls the server for changes
     var wait_poller = function() {
-      if(stopSignaled) {
+      if(!watching) {
         return
       }
       $.ajax({ 
         url: "/wait-for-change.json",
+        cache : false,
         success: function() {
           // Prevent Callstack size exceeded error
           setTimeout(function() {
@@ -56,6 +59,7 @@ var Mortar = Mortar || {};
       work_started && work_started();
       $.ajax({ 
         url: "/illustrate-results.json",
+        cache : false,
         success: function(data){
           if(data && data['error_message']) {
             on_failure && on_failure(data);
@@ -71,7 +75,7 @@ var Mortar = Mortar || {};
           if(textStatus == "timeout") {
             get_illustrate();
           } else {
-            error_func();
+            pinger(get_illustrate);
           }
         },
         timeout: 30000 
@@ -99,15 +103,21 @@ var Mortar = Mortar || {};
       onConnectionLost : function(func) {
         connection_lost = func;
       },
+
+      // Manual check illustrate
+      check : function() {
+        get_illustrate();
+      },
+      
       // Start the file watcher
       start : function() {
-        stopSignaled = false;
+        watching = true;
         get_illustrate();
         wait_poller();
       },
       // Stop the file watcher
       stop : function() {
-        stopSignaled = true;
+        watching = false;
       }
     }
   })();

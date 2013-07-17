@@ -22,6 +22,7 @@ $(document).ready(function() {
     Mortar.ErrorPanel.showError('warn', "Lost Connection to Local Pig Server!");
     $("#activity-monitor").hide();
   });
+
   Mortar.IllustrateWatcher.start();
 });
 
