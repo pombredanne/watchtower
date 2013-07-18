@@ -36,7 +36,8 @@ class Mortar::Local::Grunt <  Mortar::Local::Pig
   PIGJIG_TIMEOUT = 5 * 60 
 
   # The number of times we should initally retry connection to pigjig
-  PIGJIG_INITIAL_RETRY_COUNT = 10
+  PIGJIG_INITIAL_RETRY_COUNT = 20
+  PIGJIG_INITIAL_RETRY_INTERVAL = 3
 
   def initialize
     reset_local_logs
@@ -279,7 +280,7 @@ ERROR
         return
       rescue Errno::ECONNREFUSED => e
         break if i == PIGJIG_INITIAL_RETRY_COUNT
-        sleep 3
+        sleep PIGJIG_INITIAL_RETRY_INTERVAL
         puts "Still waiting..."
       end
     end
