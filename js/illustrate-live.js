@@ -19,8 +19,8 @@ $(document).ready(function() {
   preload.src = "/images/caution.png"
   Mortar.IllustrateWatcher.onSuccess(function(data) {
     Mortar.ErrorPanel.clearError();
-      Mortar.IllustrateViewer.update(data);
     try {
+      Mortar.IllustrateViewer.update(data);
     } catch (err) {
       Mortar.ErrorPanel.showError('error', err)
     }
