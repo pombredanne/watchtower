@@ -54,11 +54,8 @@
         item.stylestack('enable');
         preview.stylestack('enable');
         content.stylestack('enable');
-        
-        
-        $(this.element).click( function(event) {
-            _this.open();
-        });
+        $(this.element).stylestack('enable');
+
         $(this.element).find(this.options.contentSelector).click( function(event) {
             event.stopPropagation();
         });      
@@ -75,6 +72,7 @@
         
         $(this.element).find(this.options.expandingSelector).stylestack('pop', function () {
             $(_this.element).removeClass('active'); 
+            $(this.element).stylestack('pop');
         });
         $(this.element).find(this.options.previewSelector).stylestack('pop');
         $(this.element).find(this.options.contentSelector).stylestack('pop');
@@ -90,6 +88,11 @@
             , _this = this;
         
         if(!$(_this.element).hasClass('active')) {
+
+            var wrapperWidth = $(this.element).outerWidth();
+            var wrapperHeight = $(this.element).outerHeight();
+
+            $(_this.element).css({ 'height' : wrapperHeight, 'width' : wrapperWidth});
             item.css(containerStyles['containerStyle']);
             
             // This is a hack to let the page reflow
