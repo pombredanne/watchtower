@@ -23,8 +23,28 @@ var Mortar = Mortar || {};
     var getAlias = function(text) {
       return text.match(/\s*(\w+)\s*=.*/)[1];
     };
-    var highlightAlias = function(text) {
-      return text.replace(/(\s*)(\w+)(\s*=.*)/, "$1<span class=\"alias\">$2</span>$3");
+    var highlightAlias = function(text, alias_index) {
+      return text
+          .replace(/(\s*)(\w+)(\s*=.*)/g, "$1<span data-statement=\"" + alias_index + "\" class=\"alias\">$2</span>$3")
+          .replace(/<span (.*) class="alias">(\w+)<\/span>/,"<span $1 class=\"alias active\">$2</span>");
+    };
+    var getStatements = function(text) {
+      return text.match(/\s*(\w+)\s*=[\s\w]*({[\s\S]*})?('[\s\S]*')?([^;]|[\r\n])*;/g);
+    };
+    var getNestedStatements = function(text) {
+      try {
+        var innerStatements = text
+                .match(/\s*\w+\s*=[\s\S]*{([\s\S]*)}/)[1]
+                .match(/\s*(\w+)\s*=.*/g);
+        
+        var innerAliases = [];
+        for(var i in innerStatements) {
+          innerAliases.push(innerStatements[i].replace(/\s*(\w+)\s*=.*/, "$1"));
+        }
+        return innerAliases;
+      } catch(err) {
+        return null;
+      }
     };
     
     /* Internal: Merge the illustrate data with the raw script into
@@ -35,47 +55,59 @@ var Mortar = Mortar || {};
      *
      * Throws error if script doesn't match up with tables
      *
-     * Returns Array [ { alias :, text:, table: }...]
+     * Returns Array [ { alias :, text:, tables: }...]
      */
     var generateSplits = function(script, tables) {
-      var statements = script.split(";")
+      var statements = getStatements(script)
           , splits = []
           , tindex = 0;
 
-      // Added the ';' back to the statements
-      for(var index = 0, length = statements.length; index < length - 1; index++) {
-        statements[index] += ";";
-      }
-
-      var currentSplitText = "";
+      var cursorPosition = 0;
       for(var index in statements) {
-        if(isAlias(statements[index])) {
-          var current_alias = getAlias(statements[index]);
-          var table = tables[tindex];
+        var newCursorPosition = script.indexOf(statements[index]) + statements[index].length;
+        var text = script.substring(cursorPosition, newCursorPosition);
+        var current_alias = getAlias(statements[index]);
 
-          // Sanity check to make sure the aliases match
-          if(table['alias'] != current_alias) {
-            throw "Uhoh! Illustrate data and script don't seem to match";
+        var data_tables = [];
+
+        var innerAliases = getNestedStatements(text); 
+        if(innerAliases) {
+          for(var jindex in innerAliases) {
+            // Make sure the aliases line up
+            if(tables[tindex]['alias'] != current_alias + "." + innerAliases[jindex]) {
+              throw "Uhoh! Illustrate data for nested alias and script don't seem to match";
+            }
+            data_tables.push(tables[tindex]);
+            tindex++;
           }
-
-          splits.push({
-            alias : current_alias,
-            text : highlightAlias(currentSplitText + statements[index]),
-            table : table,
-          });
-
-          tindex++;
-          currentSplitText = "";
         }
-        else {
-          currentSplitText += statements[index];
+
+        // Make sure the aliases line up
+        if(tables[tindex]['alias'] != current_alias) {
+          throw "Uhoh! Illustrate data and script don't seem to match";
         }
+
+        // Always make sure the dominant table is at the front
+        // Pig returns tables in order of execution completion.
+        // The dominant alias (not nested) will be last. We want
+        // it to be first because that's the order the alias is shown
+        // in the text of the script.
+        data_tables.unshift(tables[tindex]);
+
+        splits.push({
+          alias : current_alias,
+          text : highlightAlias(text, index),
+          tables : data_tables,
+        });
+
+        cursorPosition = newCursorPosition;
+        tindex++;
       }
 
-      if(currentSplitText != null && currentSplitText != "") {
+      if(cursorPosition < script.length) {
         splits.push({
           alias : null,
-          text : currentSplitText,
+          text : script.substring(cursorPosition),
           table : null,
         });
       }
@@ -83,7 +115,7 @@ var Mortar = Mortar || {};
       return splits;
     };
 
-    var clickAlias = function(e) {
+    var clickTableHeader = function(e) {
       var container = $(this).closest('.inline-illustrate-data');
       var num_elements = $(container).find('tbody tr').length;
 
@@ -105,17 +137,18 @@ var Mortar = Mortar || {};
           $(container).addClass("preview");
         }
       }
-
+    };
+    
+    var clickAlias = function() {
+      if($(this).hasClass('active')) { return; }
+      var statement_index = $(this).data('statement');
+      var alias_index = $(".alias[data-statement=" + statement_index + "]").index(this);
+      $(".alias[data-statement=" + statement_index + "].active").removeClass("active");
+      $(this).addClass('active');
+      $("tr[data-statement="+ statement_index +"] table.illustrate-data.selected").removeClass("selected");
+      $("tr[data-statement="+ statement_index +"] table.illustrate-data").eq(alias_index).addClass("selected");
     };
 
-    // When the document has stopped scrolling 
-    // updated the last hovered object just in case the
-    // cursor is still hovering it.
-    var _lastHoveredCell = null;
-    Mortar.Util.onScrollStop(function(e) {
-      $(_lastHoveredCell).css('height', $(_lastHoveredCell).height());
-    });
-    
     return {
       /* Public: Update the current illustrate viewer with 
        * new illustrate data.
@@ -141,23 +174,14 @@ var Mortar = Mortar || {};
         $("#illustrate_content").html(illustrate_html);
 
         $.mortarTableExpandableCell("delete_all");
-        var cell_hover = function() {
-          if(!Mortar.Util.isScrolling()) {
-            $(this).css('height', $(this).height());
-          } else {
-            // Set the lastHoveredCell variable, so it's height will be set 
-            // when scrolling stops
-            _lastHoveredCell = this;
-          }
-        };
         var cell_clicked = function() {
           $(this).mortarTableExpandableCell('open');
         };
         $('table.illustrate-data td.mortar-table-expandable-cell').each(function() {
           $(this).click(cell_clicked);
-          $(this).hover(cell_hover);
         });
-        $('table.illustrate-data thead').click(clickAlias);
+        $('table.illustrate-data thead').click(clickTableHeader);
+        $('span.alias').click(clickAlias);
       },
     }
   })();

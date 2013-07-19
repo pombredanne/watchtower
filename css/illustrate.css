@@ -113,6 +113,7 @@ table.illustrate-data thead tr:first-child,
 .inline-illustrate-data > td {
   padding: 0;
   background: rgb(235,235,235);
+  overflow: hidden;
 }
 .table-scroll-wrapper {
   overflow-x:auto;
@@ -148,6 +149,7 @@ table.illustrate-data thead tr:first-child,
   background: rgb(174,174,174);
   border-left: 1px solid rgb(80,80,80);
   border-bottom: 1px solid rgb(80,80,80);
+  pointer-events:none;
 }
 .inline-illustrate-data.preview .table-notifier .table-notifier-arrow {
   background-position: -16px 0;
@@ -155,7 +157,11 @@ table.illustrate-data thead tr:first-child,
 .inline-illustrate-data.selected .table-notifier .table-notifier-arrow {
   background-position: -32px 0;
 }
+table.illustrate-data.selected {
+  display:table;
+}
 table.illustrate-data {
+  display:none;
   min-width: 100%; 
   table-layout:fixed;
   empty-cells:show;
@@ -223,7 +229,13 @@ table.file-data td.line-code {
   background-color: rgb(250,250,250);
 }
 table.file-data td.line-code .alias {
+  border-bottom: 1px dotted black;
+  cursor:pointer;
+}
+table.file-data td.line-code .alias.active {
   font-family: menlo;
   font-weight: bold;
   font-size: 16px;
+  border-bottom:none;
+  cursor:default;
 }
