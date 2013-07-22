@@ -18,6 +18,7 @@
         <% if(split.tables) { %>
           <tr class="line-buffer">
             <td class="line-number">&nbsp;</td>
+            <td class="line-code">&nbsp;</td>
           </tr>
           <tr data-statement="<%= split_index %>" class="inline-illustrate-data <%= split['state'] || 'preview' %>">
             <td colspan="2">
@@ -73,6 +74,7 @@
         <% } %>
         <tr class="line-buffer">
           <td class="line-number">&nbsp;</td>
+          <td class="line-code">&nbsp;</td>
         </tr>
       <% }); %>
     </table>

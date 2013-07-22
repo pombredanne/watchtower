@@ -24,6 +24,15 @@ $ mortar watch SCRIPT_NAME
 
 ### Development ###
 
+To run the javascript unit tests, run:
+```
+$ rake test
+```
+Note this requires you have mocha installed:
+```
+npm install -g mocha
+```
+
 To help develop Mortar Watchtower, make sure you have the latest version of the Mortar Gem. Then clone this repo and run:
 
 ```

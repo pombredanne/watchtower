@@ -17,36 +17,6 @@
 var Mortar = Mortar || {};
 (function(Mortar) {
   Mortar.IllustrateViewer = (function() {
-    var isAlias = function(text) {
-      return !! text.match(/\s*(\w+)\s*=.*/);
-    };
-    var getAlias = function(text) {
-      return text.match(/\s*(\w+)\s*=.*/)[1];
-    };
-    var highlightAlias = function(text, alias_index) {
-      return text
-          .replace(/(\s*)(\w+)(\s*=.*)/g, "$1<span data-statement=\"" + alias_index + "\" class=\"alias\">$2</span>$3")
-          .replace(/<span (.*) class="alias">(\w+)<\/span>/,"<span $1 class=\"alias active\">$2</span>");
-    };
-    var getStatements = function(text) {
-      return text.match(/\s*(\w+)\s*=[\s\w]*({[\s\S]*})?('[\s\S]*')?([^;]|[\r\n])*;/g);
-    };
-    var getNestedStatements = function(text) {
-      try {
-        var innerStatements = text
-                .match(/\s*\w+\s*=[\s\S]*{([\s\S]*)}/)[1]
-                .match(/\s*(\w+)\s*=.*/g);
-        
-        var innerAliases = [];
-        for(var i in innerStatements) {
-          innerAliases.push(innerStatements[i].replace(/\s*(\w+)\s*=.*/, "$1"));
-        }
-        return innerAliases;
-      } catch(err) {
-        return null;
-      }
-    };
-    
     /* Internal: Merge the illustrate data with the raw script into
      * a better data structure for dealing with in the controller and view.
      *
@@ -58,7 +28,7 @@ var Mortar = Mortar || {};
      * Returns Array [ { alias :, text:, tables: }...]
      */
     var generateSplits = function(script, tables) {
-      var statements = getStatements(script)
+      var statements = Mortar.Parser.getStatements(script)
           , splits = []
           , tindex = 0;
 
@@ -66,12 +36,12 @@ var Mortar = Mortar || {};
       for(var index in statements) {
         var newCursorPosition = script.indexOf(statements[index]) + statements[index].length;
         var text = script.substring(cursorPosition, newCursorPosition);
-        var current_alias = getAlias(statements[index]);
+        var current_alias = Mortar.Parser.getAlias(statements[index]);
 
         var data_tables = [];
 
-        var innerAliases = getNestedStatements(text); 
-        if(innerAliases) {
+        var innerAliases = Mortar.Parser.getNestedAliases(text); 
+        if(innerAliases && innerAliases.length > 0) {
           for(var jindex in innerAliases) {
             // Make sure the aliases line up
             if(tables[tindex]['alias'] != current_alias + "." + innerAliases[jindex]) {
@@ -96,7 +66,7 @@ var Mortar = Mortar || {};
 
         splits.push({
           alias : current_alias,
-          text : highlightAlias(text, index),
+          text : Mortar.Parser.highlightAlias(text, index),
           tables : data_tables,
         });
 

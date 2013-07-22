@@ -26,13 +26,16 @@ task :watch => [:verify, :install] do
   print "Watching #{PLUGIN_NAME} for changes... "
   STDOUT.flush
 
-  @listener = Listen.to(Dir.pwd)
+  @listener = Listen.to(Dir.pwd,
+                       :ignore => /\.(swp)/)
   changed = lambda do |modified, added, removed|
     puts "Success!"
     puts "File(s) changed:"
     for file in modified
       puts file 
     end
+    puts "Running tests..."
+    Rake::Task["test"].execute
     Rake::Task["install"].execute
     print "Watching #{PLUGIN_NAME} for changes... "
     STDOUT.flush
@@ -85,6 +88,10 @@ task :ctags do
   puts "Done generating ctags"
 end
 
+desc "Run javascript tests"
+task :test do
+  system("mocha")
+end
 
 trap("INT") do
   @listener.stop if @listener

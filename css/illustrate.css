@@ -176,7 +176,7 @@ table.illustrate-data th:last-child {
 }
 table.illustrate-data td, 
 table.illustrate-data th {
-  max-width: 250px;
+  max-width: 325px;
   text-overflow:ellipsis;
   word-wrap:break-word;
 }
@@ -204,7 +204,8 @@ table.illustrate-data thead th:first-child:before {
 table.file-data {
   width: 100%;
 }
-table.file-data tr.line-buffer td.line-number {
+table.file-data tr.line-buffer td.line-number,
+table.file-data tr.line-buffer td.line-code {
   font-size: 1px;
   line-height: 10px;
 }
