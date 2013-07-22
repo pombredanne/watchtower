@@ -29,8 +29,16 @@ var Mortar = Mortar || {};
      */
     var generateSplits = function(script, tables) {
       var statements = Mortar.Parser.getStatements(script)
-          , splits = []
-          , tindex = 0;
+          , splits = [];
+      
+      var extractTable = function(alias) {
+        for(var index in tables) {
+          if(tables[index]['alias'] == alias) {
+            return tables.splice(index, 1)[0];
+          }
+        }
+        throw "Cannot find alias " + alias + "in the tables"
+      };
 
       var cursorPosition = 0;
       for(var index in statements) {
@@ -43,26 +51,24 @@ var Mortar = Mortar || {};
         var innerAliases = Mortar.Parser.getNestedAliases(text); 
         if(innerAliases && innerAliases.length > 0) {
           for(var jindex in innerAliases) {
-            // Make sure the aliases line up
-            if(tables[tindex]['alias'] != current_alias + "." + innerAliases[jindex]) {
-              throw "Uhoh! Illustrate data for nested alias and script don't seem to match";
+            try {
+              data_tables.push(extractTable(current_alias + "." + innerAliases[jindex]));
+            } catch(err) {
+              console.error("Could not find illustrate data for alias: " + current_alias + ". Skipping the alias");
             }
-            data_tables.push(tables[tindex]);
-            tindex++;
           }
         }
 
-        // Make sure the aliases line up
-        if(tables[tindex]['alias'] != current_alias) {
-          throw "Uhoh! Illustrate data and script don't seem to match";
+        try {
+          // Always make sure the dominant table is at the front
+          // Pig returns tables in order of execution completion.
+          // The dominant alias (not nested) will be last. We want
+          // it to be first because that's the order the alias is shown
+          // in the text of the script.
+          data_tables.unshift(extractTable(current_alias));
+        } catch(err) {
+          console.error("Could not find illustrate data for alias: " + current_alias + ". Skipping the alias");
         }
-
-        // Always make sure the dominant table is at the front
-        // Pig returns tables in order of execution completion.
-        // The dominant alias (not nested) will be last. We want
-        // it to be first because that's the order the alias is shown
-        // in the text of the script.
-        data_tables.unshift(tables[tindex]);
 
         splits.push({
           alias : current_alias,
@@ -70,8 +76,7 @@ var Mortar = Mortar || {};
           tables : data_tables,
         });
 
-        cursorPosition = newCursorPosition;
-        tindex++;
+        cursorPosition = newCursorPosition + 1;
       }
 
       if(cursorPosition < script.length) {
@@ -118,6 +123,14 @@ var Mortar = Mortar || {};
       $("tr[data-statement="+ statement_index +"] table.illustrate-data.selected").removeClass("selected");
       $("tr[data-statement="+ statement_index +"] table.illustrate-data").eq(alias_index).addClass("selected");
     };
+        
+    // When the document has stopped scrolling 
+    // updated the last hovered object just in case the
+    // cursor is still hovering it.
+    var _lastHoveredCell = null;
+    Mortar.Util.onScrollStop(function(e) {
+      $(_lastHoveredCell).css('height', $(_lastHoveredCell).height());
+    });
 
     return {
       /* Public: Update the current illustrate viewer with 
@@ -144,11 +157,21 @@ var Mortar = Mortar || {};
         $("#illustrate_content").html(illustrate_html);
 
         $.mortarTableExpandableCell("delete_all");
+        var cell_hover = function() {
+          if(!Mortar.Util.isScrolling() && !$(this).hasClass('active')) {
+            $(this).css('height', $(this).height());
+          } else {
+            // Set the lastHoveredCell variable, so it's height will be set 
+            // when scrolling stops
+            _lastHoveredCell = this;
+          }
+        };
         var cell_clicked = function() {
           $(this).mortarTableExpandableCell('open');
         };
         $('table.illustrate-data td.mortar-table-expandable-cell').each(function() {
           $(this).click(cell_clicked);
+          $(this).hover(cell_hover);
         });
         $('table.illustrate-data thead').click(clickTableHeader);
         $('span.alias').click(clickAlias);

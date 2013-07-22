@@ -2,6 +2,14 @@ var Mortar = Mortar || {};
 
 (function(Mortar) {
   Mortar.Parser = (function() {
+
+    var removeComments = function(text) {
+      return text.replace(/(--.*|\/\*[\s\S]*\*\/)*/g, '');
+    };
+    var getStatements = function(text) {
+      return removeComments(text).match(/(\w+)\s*=(.*({[^}]*});?|[^;]*;).*/g);
+    };
+
     return {
       isAlias : function(text) {
         return !! text.match(/\s*(\w+)\s*=.*/);
@@ -10,17 +18,17 @@ var Mortar = Mortar || {};
         return text.match(/\s*(\w+)\s*=.*/)[1];
       },
       highlightAlias : function(text, alias_index) {
-        return text
-            .replace(/(\s*)(\w+)(\s*=.*)/g, "$1<span data-statement=\"" + alias_index + "\" class=\"alias\">$2</span>$3")
-            .replace(/<span (.*) class="alias">(\w+)<\/span>/,"<span $1 class=\"alias active\">$2</span>");
-      },
-      getStatements : function(text) {
-        var statements = text.match(/\s*(\w+)\s*=([\w\s]*({[^}]*});?|[^;]*;)/g);
-        for(var index in statements) {
-          statements[index] = statements[index].trim();
+        var statements = getStatements(text);
+        for(var i in statements) {
+          text = text.replace(
+            statements[i],
+            statements[i].replace(/(\s*)(\w+)(\s*=.*)/g, 
+              "$1<span data-statement=\"" + alias_index + "\" class=\"alias\">$2</span>$3")
+            );
         }
-        return statements;
+        return text.replace(/<span (.*) class="alias">(\w+)<\/span>/,"<span $1 class=\"alias active\">$2</span>");
       },
+      getStatements : getStatements,
       getNestedAliases : function(text) {
         try {
           var innerStatements = text

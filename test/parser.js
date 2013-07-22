@@ -62,35 +62,37 @@ describe('Mortar.Parser', function() {
     });
 
     it('should get the statements with nested foreach', function() {
-      var script =  "-- This is a test comment\n"
-                  + "/**\n" 
-                  + " * This is a test comment\n"
-                  + " */\n"
-                  + "uri_counts_by_date = FOREACH {\n"
-                  + "test = FOREACH derp GENERATE bar;\n"
-                  + "test = FOREACH derp GENERATE bar;\n"
-                  + "GENERATE bar;\n"
-                  + "}\n"
-                  + "\n"
-                  + "-- Comment at end of script\n"
-                  + "test = FOREACH derp GENERATE bar;\n"
-                  + "\n"
-                  + "-- Comment at end of script\n"
-                  + "\n"
-                  + "\n"
-
-      var first_statement = "uri_counts_by_date = FOREACH {\n"
-                  + "test = FOREACH derp GENERATE bar;\n"
-                  + "test = FOREACH derp GENERATE bar;\n"
-                  + "GENERATE bar;\n"
-                  + "}"
-
-      var second_statement = "test = FOREACH derp GENERATE bar;"
-
+      var script =  "-- Sessionize the web messages\n"
+                  + " small_message = FOREACH (FILTER message by timestamp is not null) {\n"
+                  + "   GENERATE timestamp, ISOToUnix(timestamp) as unix_time, user_id;\n"
+                  + "   };\n";
+      
+      var statement = "small_message = FOREACH (FILTER message by timestamp is not null) {\n"
+                  + "   GENERATE timestamp, ISOToUnix(timestamp) as unix_time, user_id;\n"
+                  + "   };";
       var statements = Mortar.Parser.getStatements(script);
-      assert.equal(statements.length, 2);
-      assert.equal(statements[0], first_statement);
-      assert.equal(statements[1], second_statement);
+      assert.equal(statements.length, 1);
+      assert.equal(statements[0], statement);
+    });
+
+    it('should not get messed up by multiple sets of comments', function() {
+      var script = "/**\n"
+                  + " * songs = LOCAL_SONGS_FILE();\n"
+                  + " */\n"
+                  + "-- This is test = Foobar; a comment\n"
+                  + "/**\n"
+                  + " * This is test = Foobar; a comment\n"
+                  + " */\n"
+                  + "small_message = FOREACH (FILTER message by timestamp is not null) {\n"
+                  + "   GENERATE timestamp, ISOToUnix(timestamp) as unix_time, user_id;\n"
+                  + "   };";
+
+      var statement = "small_message = FOREACH (FILTER message by timestamp is not null) {\n"
+                  + "   GENERATE timestamp, ISOToUnix(timestamp) as unix_time, user_id;\n"
+                  + "   };";
+      var statements = Mortar.Parser.getStatements(script);
+      assert.equal(statements.length, 1);
+      assert.equal(statements[0], statement);
     });
   });
 
@@ -107,6 +109,53 @@ describe('Mortar.Parser', function() {
       assert.equal(innerAliases.length, 2);
       assert.equal('alias_one', innerAliases[0]);
       assert.equal('alias_two', innerAliases[1]);
+    });
+  });
+
+  describe("hightlightAlias", function() {
+    it('should not get messed up by comments', function() {
+      var script = "-- This is test = Foobar; a comment\n"
+                  + "derp = FOREACH test GENERATE derp;\n";
+      var expected = "-- This is test = Foobar; a comment\n"
+                  + "<span data-statement=\"0\" class=\"alias active\">derp</span> = FOREACH test GENERATE derp;\n";
+      var highlighted = Mortar.Parser.highlightAlias(script, 0);
+      assert.equal(highlighted, expected);
+    });
+
+    it('should not get messed up by block comments', function() {
+      var script = "/*\n"
+                  + " * This is test = Foobar; a comment\n"
+                  + " */\n"
+                  + "derp = FOREACH test GENERATE derp;\n";
+      var expected = "/*\n"
+                  + " * This is test = Foobar; a comment\n"
+                  + " */\n"
+                  + "<span data-statement=\"0\" class=\"alias active\">derp</span> = FOREACH test GENERATE derp;\n";
+
+      var highlighted = Mortar.Parser.highlightAlias(script, 0);
+      assert.equal(highlighted, expected);
+    });
+
+    it('should not get messed up by multiple sets of comments', function() {
+      var script = "/**\n"
+                  + " * songs = LOCAL_SONGS_FILE();\n"
+                  + " */\n"
+                  + "-- This is test = Foobar; a comment\n"
+                  + "/**\n"
+                  + " * This is test = Foobar; a comment\n"
+                  + " */\n"
+                  + "derp = FOREACH test GENERATE derp;\n";
+      var expected = "/**\n"
+                  + " * songs = LOCAL_SONGS_FILE();\n"
+                  + " */\n"
+                  + "-- This is test = Foobar; a comment\n"
+                  + "/**\n"
+                  + " * This is test = Foobar; a comment\n"
+                  + " */\n"
+                  + "<span data-statement=\"0\" class=\"alias active\">derp</span> = FOREACH test GENERATE derp;\n";
+
+      var highlighted = Mortar.Parser.highlightAlias(script, 0);
+      assert.equal(highlighted, expected);
     });
   });
 });
