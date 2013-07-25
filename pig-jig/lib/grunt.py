@@ -44,8 +44,6 @@ from lib.io import NullOutputStream
 
 class Grunt():
     def __init__(self):
-        # Redirect standard out to log file
-        # javasystem.setOut(PrintStream(NullOutputStream()))
         self.originalOut = sys.stdout
 
         # Setup pig
