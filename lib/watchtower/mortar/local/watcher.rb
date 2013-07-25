@@ -60,8 +60,7 @@ class Mortar::Local::Watcher
     }
 
     pig_listener = Listen.to(@project_root_path,
-       :filter => /(udfs|macros|pigscripts).*/,
-       :ignore => /^\..*$/)
+       :ignore => /(^\..*$|logs.*)/)
 
     pig_listener.change(&script_changed)
     pig_listener.start

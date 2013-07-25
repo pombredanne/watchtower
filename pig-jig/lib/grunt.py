@@ -14,6 +14,9 @@
 # limitations under the License.
 #
 
+import os
+import sys
+
 from com.mortardata.hawk import HawkScriptError 
 from org.apache.pig.tools.grunt import Grunt as PigGrunt
 from org.apache.pig import Main as PigMain
@@ -21,23 +24,27 @@ from org.apache.pig.impl import PigContext
 from org.apache.pig.impl.util import PropertiesUtil
 from org.apache.pig import ExecType
 from org.apache.commons.lang.exception import ExceptionUtils
+from org.apache.pig.scripting.jython import JythonFunction
+from org.apache.pig.scripting.jython import JythonScriptEngine
+from org.apache.pig.scripting import ScriptEngine
 from java.util import Properties
 from java.util import ArrayList
+from java.util import HashMap
+from java.util import LinkedHashMap
 from java.lang import String
 from java.lang import Exception as JavaException
 from java.lang import Error as JavaError
+from java.lang import Class
 from java.io import *
 from jline import *
 from java.lang import System as javasystem
 from lib.io import PigBufferedReader
 from lib.io import PigInputStream
 from lib.io import NullOutputStream
-import os
 
 class Grunt():
     def __init__(self):
-        # Redirect standard out to log file
-        javasystem.setOut(PrintStream(NullOutputStream()))
+        self.originalOut = sys.stdout
 
         # Setup pig
         props = Properties()
@@ -78,6 +85,12 @@ class Grunt():
         Simulates GruntParser.processIllustrate
         Returns JSON Illustrate results as a string
         """
+        
+        # Restore stdout
+        sys.stdout = self.originalOut
+
+        # Bust UDF Cache
+        self.bust_udf_cache()
 
         os = ByteArrayOutputStream()
         ps = PrintStream(os)
@@ -101,6 +114,28 @@ class Grunt():
             return HawkScriptError.getHawkScriptError(e).toJSON()
 
         return os.toString("UTF8")
+
+    def bust_udf_cache(self):
+        """
+        Clears the UDF caches in the pigContext variable, as well
+        as deletes the function definitions for Jython
+        """
+        # Delete all functions in the Jython interpreter
+        jython_script_engine = ScriptEngine.getInstance("jython")
+        for func_key in self.pigServer.pigContext.definedFunctions:
+            func = self.pigServer.pigContext.definedFunctions.get(func_key)
+            print func.toString()
+            if str(func).startswith(str(JythonFunction.canonicalName) + '('):
+                command = "del(%s)" % func_key.split('.')[-1]
+                command_stream = ByteArrayInputStream(String(command).getBytes("UTF-8"));
+                jython_script_engine.load(command_stream, None, None)
+
+        self.pigServer.pigContext.scriptingUDFs = HashMap() 
+        self.pigServer.pigContext.scriptFiles = ArrayList() 
+        self.pigServer.pigContext.aliasedScriptFiles = LinkedHashMap() 
+        self.pigServer.pigContext.definedFunctions = HashMap() 
+        self.pigServer.pigContext.definedCommands = HashMap() 
+
 
     def run_command(self, commands):
         """
