@@ -142,12 +142,14 @@ var Mortar = Mortar || {};
         var splits = generateSplits(illustrate_data['script'], illustrate_data['tables']);
         // Perserve state by order
         $("tr.inline-illustrate-data").each(function(i, elem) {
-          if($(elem).hasClass("preview")) {
-            splits[i]['state'] = "preview";
-          } else if($(elem).hasClass("selected")) {
-            splits[i]['state'] = "selected";
-          } else {
-            splits[i]['state'] = "collapsed";
+          if(splits[i]) {
+            if($(elem).hasClass("preview")) {
+              splits[i]['state'] = "preview";
+            } else if($(elem).hasClass("selected")) {
+              splits[i]['state'] = "selected";
+            } else {
+              splits[i]['state'] = "collapsed";
+            }
           }
         });
         var illustrate_html = _.template($("#template_illustrate").html())({
