@@ -1,6 +1,6 @@
 ## Mortar Watchtower
 
-Mortar Watchtower is a plugin for the [Mortar Gem](https://github.com/mortardata/mortar). It provides instant feedback about what is happening in your pigscript. On save, Mortar Watchtower will illustrate your data and feed the results to a local webpage.
+Mortar Watchtower is a plugin for the [Mortar Gem](https://github.com/mortardata/mortar). It provides instant feedback about what is happening in your Pig script. On save, Mortar Watchtower will illustrate your data and feed the results to a local webpage.
 
 ### Installation ###
 
@@ -36,7 +36,7 @@ cd mortar-examples
 mortar projects:register mortar-examples
 ```
 
-This repository contains a fully working Mortar project with almost a dozen different example pigscripts.  For this example we're going to use a script that analyzes twitter data to find out which US states are the biggest coffee snobs.  To look at this script open *pigscripts/coffee_tweets.pig* in your favorite editor.  If you're having a hard time understanding what the script is doing, don't worry, Watchtower will help!  So let's try it out.  Open a second terminal and go to your Mortar project directory.  To start Watchtower do:
+This repository contains a fully working Mortar project with almost a dozen different example Pig scripts.  For this example we're going to use a script that analyzes twitter data to find out which US states are the biggest coffee snobs.  To look at this script open *pigscripts/coffee_tweets.pig* in your favorite editor.  If you're having a hard time understanding what the script is doing, don't worry, Watchtower will help!  So let's try it out.  Open a second terminal and go to your Mortar project directory.  To start Watchtower do:
 
 ```
 mortar watch pigscripts/coffee_tweets.pig -f params/coffee_tweets/local.small.params
@@ -44,9 +44,9 @@ mortar watch pigscripts/coffee_tweets.pig -f params/coffee_tweets/local.small.pa
 
 Once Watchtower is up and running you will have a page opened in your browser showing the coffee_tweets script where each alias is accompanied by a table demonstrating the data that makes up that alias.  In this table you can click the table header to expand or collapse the table and you can click on individual cells to see the full data of a field.  Now reading through the script is much easier as you can see exactly how each Pig statement is transforming your data.
 
-If you scroll down the page to the **coffee_tweets** alias on line 34, you'll notice a common problem when working with a small subset of your data.  None of the tweets in the data we're using are about coffee!  The **is_coffee_tweet** field is 0 for all of our rows.  
+If you side-by-side your Mortar project code editor and Watchtower (either split screen or on separate monitors) you can easily make changes to your code while at the same time seeing the immediate effects of your changes in Watchtower.
 
-Here's a good time to point out that a common work flow for using Watchtower is to have one half of your screen (or a second monitor if you have one) displaying the Watchtower results and the other half of your screen (or your main monitor) displaying the editor you're using to work on your Mortar project.  This combination lets you make changes to your code while at the same time seeing the immediate effects of your changes.
+If you scroll down the page to the **coffee_tweets** alias on line 34, you'll notice a common problem when working with a small subset of your data.  None of the tweets in the data we're using are about coffee!  The **is_coffee_tweet** field is 0 for all of our rows.  Let's change that.
 
 Back in your first terminal use your favorite editor to open udfs/python/coffee.py.  This is the file where we keep our Python udf that determines if a tweet is about coffee or not.  Our logic here is pretty simple - if the tweet contains one of the phrases in **COFFEE_SNOB_PHRASES** we consider the tweet about coffee.  We're going to modify this method so that it considers one of our example tuples to be about coffee.  Looking at our data we see we have a tweet that has the word *poolside* in it.  So go ahead and add that phrase to **COFFEE_SNOB_PHRASES**.  So at the start of *udfs/python/coffee.py* you should have:
 
@@ -62,9 +62,9 @@ COFFEE_SNOB_PHRASES = set((\
 
 Once you save that change, switch back to your browser.  Looking at the **coffee_tweets** alias notice that we now have a data tuple that has a 1 in it for **is_coffee_tweet**.  Watchtower is always watching your Mortar project and as changes are made to files its automatically updating the browser window with the latest code and data.
 
-Watchtower will also give you immediate feedback on many errors you make during development.  Go back to /udfs/python/coffee.py, delete line 3, save, and go back to your browser.  Watchtower catches the error and points you to the problem with a very visible red error message at the top of the page.  Go back to the file and undelete line 3 and Watchtower will quickly pick up the change and display your script again.
+Watchtower will also give you immediate feedback on many errors you make during development.  Go back to /udfs/python/coffee.py, delete line 3, save, and go back to your browser.  Watchtower catches the error and points you to the problem with a red error message at the top of the page.  Go back to the file and undelete line 3 and Watchtower will quickly pick up the change and display your script again.
 
-When we ran Watchtower above we provided it a parameter file params/coffee_tweets_local.small.params.  This file told our pig script to use a small local dataset of 3 tweets.  When using Watchtower it can often be helpful to have a small local dataset that you use during development.  However, Watchtower can also work against data thats in S3.  Go back to where you have Watchtower running and use CTRL+C to stop it.  Now we're going to restart it using the default parameters in our script:
+When we ran Watchtower above we provided it a parameter file params/coffee_tweets_local.small.params.  This file told our Pig script to use a small local dataset of 3 tweets.  When using Watchtower it can often be helpful to have a small local dataset that you use during development.  However, Watchtower can also work against data that is stored in S3.  Go back to where you have Watchtower running and use CTRL+C to stop it.  Now we're going to restart it using the default parameters in our script:
 
 ```
 mortar watch pigscripts/coffee_tweets.pig
@@ -72,7 +72,7 @@ mortar watch pigscripts/coffee_tweets.pig
 
 Looking at the browser results you'll see it looks very similar to before except now we have more data and its coming from Mortar's example twitter data in S3.
 
-And thats it!  As you can see Watchtower is a very powerful tool for understanding exactly what's happening with your data and your pig script.
+And thats it!  As you can see Watchtower is a very powerful tool for understanding exactly what's happening with your data and your Pig script.
 
 
 ### Development ###
