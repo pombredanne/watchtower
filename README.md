@@ -7,13 +7,8 @@ Mortar Watchtower is a plugin for the [Mortar Gem](https://github.com/mortardata
 Before getting started make sure you already have [Mortar installed](http://help.mortardata.com/reference/mortar_project_reference/install_mortar_development_framework).
 
 ```
-$ mortar plugins:install https://github.com/mortardata/watchtower.git
-```
-
-You also need to make sure you have bundler installed:
-
-```
 $ gem install bundler
+$ mortar plugins:install https://github.com/mortardata/watchtower.git
 ```
 
 ### Usage ###
