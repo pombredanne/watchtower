@@ -55,7 +55,7 @@ COFFEE_SNOB_PHRASES = set((\
 ))
 ```
 
-Once you save that change, switch back to your browser.  Looking at the **coffee_tweets** alias notice that we now have a data tuple that has a 1 in it for **is_coffee_tweet**.  Watchtower is always watching your Mortar project and as changes are made to files its automatically updating the browser window with the latest code and data.
+Once you save that change, switch back to your browser.  Looking at the **coffee_tweets** alias notice that we now have a data tuple that has a 1 in it for **is_coffee_tweet**.  Watchtower is always watching your Mortar project and as changes are made to files its automatically updating the browser window with the latest code and data. Watchtower also watches your local data for changes, so we could have have edited our sample data to include a word from **COFFEE_SNOB_PHRASES** to achieve the same result.
 
 Watchtower will also give you immediate feedback on many errors you make during development.  Go back to /udfs/python/coffee.py, delete line 3, save, and go back to your browser.  Watchtower catches the error and points you to the problem with a red error message at the top of the page.  Go back to the file and undelete line 3 and Watchtower will quickly pick up the change and display your script again.
 
