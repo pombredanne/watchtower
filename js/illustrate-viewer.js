@@ -140,6 +140,7 @@ var Mortar = Mortar || {};
        */
       update : function(illustrate_data) {
         var splits = generateSplits(illustrate_data['script'], illustrate_data['tables']);
+        var current_num_splits = $("tr.inline-illustrate-data").length;
         // Perserve state by order
         $("tr.inline-illustrate-data").each(function(i, elem) {
           if(splits[i]) {
@@ -177,6 +178,12 @@ var Mortar = Mortar || {};
         });
         $('table.illustrate-data thead').click(clickTableHeader);
         $('span.alias').click(clickAlias);
+
+        // Scroll to bottom if there are more aliases than before
+        // -1 because last split sometimes is just extra text
+        if(current_num_splits < splits.length - 1) {
+          Mortar.Util.scrollToBottom();
+        }
       },
     }
   })();

@@ -79,6 +79,17 @@ var Mortar = Mortar || {};
       */
       isScrolling : function() {
         return !$("body").hasClass("not-scrolling")
+      },
+
+      /* Public: Scroll to bottom of document
+       */
+      scrollToBottom : function() {
+        $('body').delay(200).animate({
+          scrollTop: $('body').height()
+        }, {
+          duration : 1500,
+          easing: 'swing'
+        });
       }
     };
   })();
