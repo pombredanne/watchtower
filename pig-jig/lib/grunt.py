@@ -117,7 +117,7 @@ class Grunt():
 
     def bust_udf_cache(self):
         """
-        Clears the UDF caches in the pigContext variable, as well
+        Clears the UDF and Macro caches in the pigContext variable, as well
         as deletes the function definitions for Jython
         """
         # Delete all functions in the Jython interpreter
@@ -130,6 +130,7 @@ class Grunt():
                 command_stream = ByteArrayInputStream(String(command).getBytes("UTF-8"));
                 jython_script_engine.load(command_stream, None, None)
 
+        self.pigServer.pigContext.macros = HashMap() 
         self.pigServer.pigContext.scriptingUDFs = HashMap() 
         self.pigServer.pigContext.scriptFiles = ArrayList() 
         self.pigServer.pigContext.aliasedScriptFiles = LinkedHashMap() 
