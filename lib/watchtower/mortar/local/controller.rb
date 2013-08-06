@@ -104,8 +104,12 @@ ERROR
   #
   # Returns nothing
   def launch_browser(port) 
-    require "launchy"
-    Launchy.open("http://localhost:#{port}")
+    begin
+      require "launchy"
+      Launchy.open("http://localhost:#{port}")
+    rescue => msg
+      warning "Unable to automatically launch browser. Please visit http://localhost:#{port}"
+    end
   end
 
   def styled_error(error, message='Watchtower internal error.')
