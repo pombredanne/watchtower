@@ -2,10 +2,8 @@
 <script type="text/template" id="template_error">
   <div class="<%= error_level %>">
     <div class="container">
-      <strong>
-        <img class="caution-image" src="/images/caution.png">
-        <%- error_message %>
-      </strong>
+      <img class="caution-image" src="/images/caution.png">
+      <span class="message"><%- error_message %></span>
     </div>
   </div>
 </script>

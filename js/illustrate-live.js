@@ -14,6 +14,10 @@
 //  limitations under the License.
 // 
 
+var Mortar = Mortar || {};
+Mortar.project_root = PROJECT_ROOT || "";
+Mortar.watched_file = WATCHED_FILE || "";
+
 $(document).ready(function() {
   preload = new Image()
   preload.src = "/images/caution.png"

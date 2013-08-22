@@ -17,8 +17,6 @@
 var Mortar = Mortar || {};
 (function(Mortar) {
   Mortar.Util = (function() {
-
-
     return {
 
       /* Public: Truncate the given text to the maximum number of characters
@@ -42,6 +40,20 @@ var Mortar = Mortar || {};
         return text.slice(0, mid_point - left_chars_to_remove) +
             token +
             text.slice(mid_point + right_chars_to_remove);
+      },
+      /* Public: Truncate the error message to point to the logs
+       *
+       * error_message - String error message
+       */
+      truncateErrorMessage : function(error_message) {
+        var split = error_message.split("\n");
+        if(split.length - 1 > 4) {
+          return error_message.split("\n").slice(0, 4).join("\n") 
+                  + "\n\nFull error logged in "
+                  + Mortar.project_root + "/logs/local-pig.log";
+        } else {
+          return error_message;
+        }
       },
 
       /* Public: A function to be called when the pages stops scrolling
