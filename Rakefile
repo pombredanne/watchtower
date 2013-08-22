@@ -34,8 +34,6 @@ task :watch => [:verify, :install] do
     for file in modified
       puts file 
     end
-    puts "Running tests..."
-    Rake::Task["test"].execute
     Rake::Task["install"].execute
     print "Watching #{PLUGIN_NAME} for changes... "
     STDOUT.flush
@@ -86,11 +84,6 @@ task :ctags do
   puts files
   system("jsctags #{files.join(" ")} -W debug")
   puts "Done generating ctags"
-end
-
-desc "Run javascript tests"
-task :test do
-  system("mocha")
 end
 
 trap("INT") do

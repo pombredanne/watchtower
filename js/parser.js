@@ -4,7 +4,13 @@ var Mortar = Mortar || {};
   Mortar.Parser = (function() {
 
     var removeComments = function(text) {
-      return text.replace(/\/\*([\s\S]*?)\*\//g, '').replace(/--.*/g, '');
+      var noComments = "";
+      CodeMirror.runMode(text, "text/x-pig", function(text, type) {
+        if(type != "comment") {
+          noComments += text
+        }
+      });
+      return noComments; 
     };
     var getStatements = function(text) {
       return removeComments(text).match(/(\w+)\s*=(.*({[^}]*});?|[^;]*;).*/g);
