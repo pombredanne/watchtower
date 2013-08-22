@@ -21,7 +21,7 @@ var Mortar = Mortar || {};
       showError : function(error_level, error_message, cb) {
         var error_html = _.template($("#template_error").html())({
           error_level : error_level,
-          error_message : error_message
+          error_message : Mortar.Util.truncateErrorMessage(error_message)
         });
         $("#error-container").html(error_html);
         $("#error-container > div").css('margin-top', -$("#error-container > div").outerHeight());

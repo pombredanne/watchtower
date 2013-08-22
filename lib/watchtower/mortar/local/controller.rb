@@ -28,6 +28,7 @@ class Mortar::Local::Controller
 
     # Startup Web server
     Server.set :title, pig_script.name + ".pig"
+    Server.set :project_root, project.root_path
     Server.set :grunt, grunt
     begin
       server = Thin::Server.new(Server, '0.0.0.0', port, :signals => false)
