@@ -72,13 +72,9 @@ And thats it!  As you can see Watchtower is a very powerful tool for understandi
 
 ### Development ###
 
-To run the javascript unit tests, run:
+To run the javascript unit tests, open:
 ```
-$ rake test
-```
-Note this requires you have mocha installed:
-```
-npm install -g mocha
+test/index.html
 ```
 
 To help develop Mortar Watchtower, make sure you have the latest version of the Mortar Gem. Then clone this repo and run:
