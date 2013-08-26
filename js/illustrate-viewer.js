@@ -42,7 +42,8 @@ var Mortar = Mortar || {};
 
       var cursorPosition = 0;
       for(var index in statements) {
-        var newCursorPosition = script.indexOf(statements[index]) + statements[index].length;
+        var newCursorPosition = script.indexOf('\n'
+            , script.indexOf(statements[index]) + statements[index].length);
         var text = script.substring(cursorPosition, newCursorPosition);
         var current_alias = Mortar.Parser.getAlias(statements[index]);
 
