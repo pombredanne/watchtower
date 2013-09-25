@@ -103,7 +103,7 @@ class Grunt():
 
         try:
             self.grunt.parser.loadScript(script_path, params, files)
-            self.pigServer.getExamples(None, True, ps)
+            self.pigServer.getExamples(None, True, ps, "json")
         except JavaException, e:
             print "java exception"
             print ExceptionUtils.getStackTrace(e)
