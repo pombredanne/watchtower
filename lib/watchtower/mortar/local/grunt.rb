@@ -23,11 +23,13 @@ require "json"
 class Mortar::Local::Grunt <  Mortar::Local::Pig
   class HandledError < StandardError; end
 
-  # List of PIGOPTS property files in Mortar Local
+  # List of PIGOPTS property files in Mortar Local - should be defined
+  # in Mortar but early versions had it defined here.  Just leaving this in for
+  # backwards compatibility
   DEFAULT_PIGOPTS_FILES = %w(
     /pig/conf/pig-hawk-global.properties
     /pig/conf/pig-cli-local-dev.properties
-  )
+  ) unless defined?(DEFAULT_PIGOPTS_FILES)
 
   # Public: The name of the pigjig log file
   PIGJIG_LOG_FILE = "watchtower-pigjig-server.log"
@@ -255,11 +257,12 @@ ERROR
   # Returns a Hash of all the parameters needed in the runwatcher script
   def watcher_command_script_template_parameters()
     template_params = {}
-    template_params['classpath'] = "#{pig_directory}/*:#{pig_directory}/lib/*:#{jython_directory}/jython.jar:#{pig_directory}/conf/jets3t.properties:#{pig_directory}/lib-pig/*:#{jython_directory}/jython.jar"
+    template_params['classpath'] = template_params_classpath #From mortar/pig
     template_params['project_home'] = File.expand_path("..", local_install_directory)
     template_params['local_install_dir'] = local_install_directory
     template_params['pig_jig_directory'] = pig_jig_directory 
     template_params['pig_opts'] = pig_options
+    template_params['log4j_conf'] = log4j_conf #From mortar/pig
     template_params['default_pig_opts_files'] = DEFAULT_PIGOPTS_FILES.map { |f| 
         File.expand_path(f, local_install_directory) 
       }.join(",")
